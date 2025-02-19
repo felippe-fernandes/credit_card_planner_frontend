@@ -1,20 +1,29 @@
 import { useAuthStore } from "@/store/auth";
-import { useRouter } from "next/router";
-import { useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 
 const withAuth = (WrappedComponent: React.FC) => {
   const AuthComponent: React.FC = (props) => {
     const { checkAuth, isAuthenticated } = useAuthStore();
     const router = useRouter();
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-      const authValid = checkAuth();
-      if (!authValid) {
+      const verifyAuth = async () => {
+        await checkAuth();
+        setLoading(false);
+      };
+
+      verifyAuth();
+    }, [checkAuth]);
+
+    useEffect(() => {
+      if (!loading && !isAuthenticated) {
         router.push("/login");
       }
-    }, [checkAuth, router, isAuthenticated]);
+    }, [isAuthenticated, loading, router]);
 
-    if (!isAuthenticated) {
+    if (loading || !isAuthenticated) {
       return null;
     }
 

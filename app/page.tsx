@@ -1,23 +1,27 @@
 "use client";
 
-import { useSession } from "@/hooks/useSession";
-import withAuth from "@/utils/withAuth";
+import { useAuthStore } from "@/store/auth";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
 export function Home() {
   const router = useRouter();
-  const session = useSession();
+  const { isAuthenticated, checkAuth } = useAuthStore();
 
   useEffect(() => {
-    if (session) {
-      router.push("/dashboard");
-    } else {
-      router.push("/login");
-    }
-  }, [router, session]);
+    const verifyAuth = async () => {
+      await checkAuth();
+      if (isAuthenticated) {
+        router.push("/dashboard");
+      } else {
+        router.push("/login");
+      }
+    };
+
+    verifyAuth();
+  }, [isAuthenticated, router, checkAuth]);
 
   return null;
 }
 
-export default withAuth(Home);
+export default Home;
