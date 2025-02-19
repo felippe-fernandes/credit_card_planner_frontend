@@ -5,35 +5,44 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import api from "@/lib/axios";
 import { cn } from "@/lib/utils";
-import { LoginRequest } from "@/schemas/api/auth.schema";
-import {
-  FieldErrors,
-  UseFormHandleSubmit,
-  UseFormRegister,
-} from "react-hook-form";
+import { LoginRequest, loginRequest } from "@/schemas/api/auth.schema";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useMutation } from "@tanstack/react-query";
+import { useRouter } from "next/navigation";
+import { useForm } from "react-hook-form";
 import { Button } from "../common/Button";
 import { Input } from "../common/Input";
 
 interface LoginFormProps {
   className?: string;
-  register: UseFormRegister<LoginRequest>;
-  handleSubmit: UseFormHandleSubmit<LoginRequest>;
-  isSubmitting: boolean;
-  errors: FieldErrors<LoginRequest>;
-  onSubmit: (data: LoginRequest) => void;
-  errorMessage: string;
 }
 
-export function LoginForm({
-  className,
-  register,
-  handleSubmit,
-  isSubmitting,
-  errors,
-  onSubmit,
-  errorMessage,
-}: LoginFormProps) {
+export function LoginForm({ className }: LoginFormProps) {
+  const router = useRouter();
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm<LoginRequest>({
+    resolver: zodResolver(loginRequest),
+  });
+
+  const { mutate, error } = useMutation({
+    mutationFn: async (data: LoginRequest) => {
+      const response = await api.post("/auth/login", data);
+      return response.data;
+    },
+    onSuccess: (data) => {
+      localStorage.setItem("token", data.token);
+      router.push("/dashboard");
+    },
+  });
+
+  const onSubmit = (data: LoginRequest) => mutate(data);
+
   return (
     <div className={cn("flex flex-col gap-6", className)}>
       <Card>
@@ -44,9 +53,7 @@ export function LoginForm({
         <CardContent>
           <form onSubmit={handleSubmit(onSubmit)}>
             <div className="grid gap-6">
-              {errorMessage && (
-                <p className="text-red-500 text-sm">{errorMessage}</p>
-              )}
+              {error && <p className="text-red-500 text-sm">{error.message}</p>}
 
               <div className="grid gap-6">
                 <Input
