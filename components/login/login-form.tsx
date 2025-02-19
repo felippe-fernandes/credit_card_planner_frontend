@@ -1,4 +1,3 @@
-import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -7,22 +6,48 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
-import { Input } from "./common/Input";
+import { LoginRequest } from "@/schemas/api/auth.schema";
+import {
+  FieldErrors,
+  UseFormHandleSubmit,
+  UseFormRegister,
+} from "react-hook-form";
+import { Button } from "../common/Button";
+import { Input } from "../common/Input";
+
+interface LoginFormProps {
+  className?: string;
+  register: UseFormRegister<LoginRequest>;
+  handleSubmit: UseFormHandleSubmit<LoginRequest>;
+  isSubmitting: boolean;
+  errors: FieldErrors<LoginRequest>;
+  onSubmit: (data: LoginRequest) => void;
+  errorMessage: string;
+}
 
 export function LoginForm({
   className,
-  ...props
-}: React.ComponentPropsWithoutRef<"div">) {
+  register,
+  handleSubmit,
+  isSubmitting,
+  errors,
+  onSubmit,
+  errorMessage,
+}: LoginFormProps) {
   return (
-    <div className={cn("flex flex-col gap-6", className)} {...props}>
+    <div className={cn("flex flex-col gap-6", className)}>
       <Card>
         <CardHeader className="text-center">
           <CardTitle className="text-xl">Welcome back</CardTitle>
           <CardDescription>Login with your account</CardDescription>
         </CardHeader>
         <CardContent>
-          <form>
+          <form onSubmit={handleSubmit(onSubmit)}>
             <div className="grid gap-6">
+              {errorMessage && (
+                <p className="text-red-500 text-sm">{errorMessage}</p>
+              )}
+
               <div className="grid gap-6">
                 <Input
                   label="Email"
@@ -30,7 +55,13 @@ export function LoginForm({
                   type="email"
                   placeholder="john@example.com"
                   required
+                  {...register("email")}
+                  disabled={isSubmitting}
                 />
+                {errors.email && (
+                  <p className="text-red-500 text-sm">{errors.email.message}</p>
+                )}
+
                 <div className="flex flex-col gap-2">
                   <Input
                     label="Password"
@@ -38,7 +69,15 @@ export function LoginForm({
                     type="password"
                     required
                     placeholder="At least 6 characters"
+                    {...register("password")}
+                    disabled={isSubmitting}
                   />
+                  {errors.password && (
+                    <p className="text-red-500 text-sm">
+                      {errors.password.message}
+                    </p>
+                  )}
+
                   <a
                     href="#"
                     className="ml-auto text-sm underline-offset-4 hover:underline"
@@ -46,10 +85,17 @@ export function LoginForm({
                     Forgot your password?
                   </a>
                 </div>
-                <Button type="submit" className="w-full">
-                  Login
+
+                <Button
+                  id="login"
+                  type="submit"
+                  className="w-full"
+                  disabled={isSubmitting}
+                >
+                  {isSubmitting ? "Logging in..." : "Login"}
                 </Button>
               </div>
+
               <div className="text-center text-sm">
                 Don&apos;t have an account?{" "}
                 <a href="#" className="underline underline-offset-4">

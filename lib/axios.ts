@@ -1,10 +1,14 @@
+import { useAuthStore } from "@/store/auth";
 import axios, { AxiosHeaders, Method } from "axios";
 import { env } from "./env";
+
+const { token } = useAuthStore.getState();
 
 export const api = axios.create({
   baseURL: env.NEXT_PUBLIC_API_BASE_URL,
   headers: {
     "Content-Type": "application/json",
+    Authorization: `Bearer ${token}`,
   },
 });
 

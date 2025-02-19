@@ -5,7 +5,7 @@ interface IButton extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   id: string;
 }
 
-export const Input: FC<IButton> = ({
+export const Button: FC<IButton> = ({
   className,
   children,
   id,
