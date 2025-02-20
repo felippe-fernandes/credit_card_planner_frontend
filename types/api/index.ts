@@ -5,4 +5,5 @@ export interface IResponseBase<T> {
   statusCode: HttpStatusCode;
   data: T;
   count?: number;
+  success: boolean;
 }

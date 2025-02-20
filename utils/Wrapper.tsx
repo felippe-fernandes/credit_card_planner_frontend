@@ -1,6 +1,7 @@
 "use client";
 
 import LoadingPage from "@/components/common/loader";
+import { AuthProvider } from "@/context/AuthContext";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import React, { Suspense, useState } from "react";
 
@@ -14,18 +15,20 @@ const Wrapper: React.FC<WrapperProps> = ({ children }) => {
       new QueryClient({
         defaultOptions: {
           queries: {
-            retry: 3,
+            retry: false,
             refetchOnWindowFocus: false,
           },
           mutations: {
-            retry: 3,
+            retry: false,
           },
         },
       })
   );
   return (
     <Suspense fallback={<LoadingPage />}>
-      <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+      <QueryClientProvider client={queryClient}>
+        <AuthProvider>{children}</AuthProvider>
+      </QueryClientProvider>
     </Suspense>
   );
 };

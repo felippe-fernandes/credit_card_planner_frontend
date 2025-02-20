@@ -7,10 +7,8 @@ import {
 } from "@/components/ui/card";
 import { useServiceClient } from "@/hooks/useServiceClient";
 import { cn } from "@/lib/utils";
-import { LoginRequest, loginRequest } from "@/schemas/api/auth.schema";
 import { AuthService } from "@/services/auth";
-import { useAuthStore } from "@/store/auth";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { LoginRequest } from "@/types/auth";
 import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
@@ -22,31 +20,27 @@ interface LoginFormProps {
 }
 
 export function LoginForm({ className }: LoginFormProps) {
-  const router = useRouter();
-  const { addSession } = useAuthStore();
   const AuthClient = useServiceClient({ service: AuthService });
+
+  const router = useRouter();
 
   const {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
-  } = useForm<LoginRequest>({
-    resolver: zodResolver(loginRequest),
-  });
+  } = useForm<LoginRequest>({});
 
   const { mutate, error } = useMutation({
-    mutationFn: async (payload: LoginRequest) => {
-      const { data } = await AuthClient.Login(payload);
-      addSession({ isAuthenticated: true, user: data.user, data });
-      return data;
-    },
-    onSuccess: (data) => {
-      localStorage.setItem("token", data.token);
+    mutationFn: async (payload: LoginRequest) =>
+      await AuthClient.Login(payload),
+    onSuccess: () => {
       router.push("/dashboard");
     },
   });
 
-  const onSubmit = (data: LoginRequest) => mutate(data);
+  const onSubmit = (data: LoginRequest) => {
+    mutate(data);
+  };
 
   return (
     <div className={cn("flex flex-col gap-6", className)}>

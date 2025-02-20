@@ -14,4 +14,7 @@ export type SignupResponse = IResponseBase<User>;
 
 export type SignoutResponse = IResponseBase<{ userId: User["id"] }>;
 
-export type CheckAuthResponse = IResponseBase<{ isAuthenticated: boolean }>;
+export type CheckAuthResponse = IResponseBase<{
+  isAuthenticated: boolean;
+  token: Session["access_token"];
+}>;
