@@ -5,9 +5,11 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import api from "@/lib/axios";
+import { useServiceClient } from "@/hooks/useServiceClient";
 import { cn } from "@/lib/utils";
 import { LoginRequest, loginRequest } from "@/schemas/api/auth.schema";
+import { AuthService } from "@/services/auth";
+import { useAuthStore } from "@/store/auth";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
@@ -21,6 +23,8 @@ interface LoginFormProps {
 
 export function LoginForm({ className }: LoginFormProps) {
   const router = useRouter();
+  const { addSession } = useAuthStore();
+  const AuthClient = useServiceClient({ service: AuthService });
 
   const {
     register,
@@ -31,9 +35,10 @@ export function LoginForm({ className }: LoginFormProps) {
   });
 
   const { mutate, error } = useMutation({
-    mutationFn: async (data: LoginRequest) => {
-      const response = await api.post("/auth/login", data);
-      return response.data;
+    mutationFn: async (payload: LoginRequest) => {
+      const { data } = await AuthClient.Login(payload);
+      addSession({ isAuthenticated: true, user: data.user, data });
+      return data;
     },
     onSuccess: (data) => {
       localStorage.setItem("token", data.token);

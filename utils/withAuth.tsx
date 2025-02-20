@@ -1,29 +1,30 @@
+import { useServiceClient } from "@/hooks/useServiceClient";
+import { AuthService } from "@/services/auth";
 import { useAuthStore } from "@/store/auth";
+import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 
 const withAuth = (WrappedComponent: React.FC) => {
   const AuthComponent: React.FC = (props) => {
-    const { checkAuth, isAuthenticated } = useAuthStore();
+    const {
+      session: { isAuthenticated },
+    } = useAuthStore();
     const router = useRouter();
-    const [loading, setLoading] = useState(true);
+    const AuthClient = useServiceClient({ service: AuthService });
+
+    const { data, isLoading } = useQuery({
+      queryKey: ["Check Auth"],
+      queryFn: () => AuthClient.Check(),
+    });
 
     useEffect(() => {
-      const verifyAuth = async () => {
-        await checkAuth();
-        setLoading(false);
-      };
-
-      verifyAuth();
-    }, [checkAuth]);
-
-    useEffect(() => {
-      if (!loading && !isAuthenticated) {
+      if (!isLoading && !data.isAuthenticated) {
         router.push("/login");
       }
-    }, [isAuthenticated, loading, router]);
+    }, [data.isAuthenticated, isLoading, router]);
 
-    if (loading || !isAuthenticated) {
+    if (isLoading || !isAuthenticated) {
       return null;
     }
 
