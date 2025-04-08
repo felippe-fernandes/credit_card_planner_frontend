@@ -10,6 +10,7 @@ export default defineConfig({
       schemas: "./services/model",
       client: "react-query",
       prettier: true,
+
       override: {
         mutator: {
           path: "./lib/axios.ts",
@@ -18,6 +19,7 @@ export default defineConfig({
         query: {
           useQuery: true,
           useMutation: true,
+          options: true,
         },
       },
     },

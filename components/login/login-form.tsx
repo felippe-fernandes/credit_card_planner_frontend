@@ -5,41 +5,41 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { useServiceClient } from "@/hooks/useServiceClient";
 import { cn } from "@/lib/utils";
-import { AuthService } from "@/services/auth";
-import { LoginRequest } from "@/types/auth";
-import { useMutation } from "@tanstack/react-query";
+import { useAuthLogin } from "@/services/api/authentication/authentication";
+import { authLoginBody } from "@/services/zod/authentication/authentication.zod";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
+import { z } from "zod";
 import { Button } from "../common/Button";
 import { Input } from "../common/Input";
+
+type AuthLoginBody = z.infer<typeof authLoginBody>;
 
 interface LoginFormProps {
   className?: string;
 }
 
 export function LoginForm({ className }: LoginFormProps) {
-  const AuthClient = useServiceClient({ service: AuthService });
-
   const router = useRouter();
 
   const {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
-  } = useForm<LoginRequest>({});
+  } = useForm<AuthLoginBody>({
+    resolver: zodResolver(authLoginBody),
+  });
 
-  const { mutate, error } = useMutation({
-    mutationFn: async (payload: LoginRequest) =>
-      await AuthClient.Login(payload),
-    onSuccess: () => {
-      router.push("/dashboard");
+  const { mutate, error: loginError } = useAuthLogin({
+    mutation: {
+      onSuccess: () => router.push("/dashboard"),
     },
   });
 
-  const onSubmit = (data: LoginRequest) => {
-    mutate(data);
+  const onSubmit = async ({ email, password }: AuthLoginBody) => {
+    mutate({ data: { email, password } });
   };
 
   return (
@@ -52,7 +52,9 @@ export function LoginForm({ className }: LoginFormProps) {
         <CardContent>
           <form onSubmit={handleSubmit(onSubmit)}>
             <div className="grid gap-6">
-              {error && <p className="text-red-500 text-sm">{error.message}</p>}
+              {loginError && (
+                <p className="text-red-500 text-sm">{loginError.message}</p>
+              )}
 
               <div className="grid gap-6">
                 <Input

@@ -1,9 +1,11 @@
-import axios, {
-  AxiosError,
-  AxiosHeaders,
-  AxiosRequestConfig,
-  Method,
-} from "axios";
+import {
+  ResponseBadRequestDto,
+  ResponseForbiddenDto,
+  ResponseInternalServerErrorDto,
+  ResponseNotFoundDto,
+  ResponseUnauthorizedDto,
+} from "@/services/model";
+import axios, { AxiosError, AxiosRequestConfig } from "axios";
 import { env } from "./env";
 
 // ✅ ÚNICA instância global de axios
@@ -31,7 +33,23 @@ export const customInstance = <T>(
     ...config,
     ...options,
     cancelToken: source.token,
-  }).then(({ data }) => data) as CancellablePromise<T>;
+  })
+    .then(({ data }) => data)
+    .catch(
+      (
+        error: AxiosError<
+          ErrorType<
+            | ResponseBadRequestDto
+            | ResponseUnauthorizedDto
+            | ResponseForbiddenDto
+            | ResponseInternalServerErrorDto
+            | ResponseNotFoundDto
+          >
+        >
+      ) => {
+        throw error.response?.data || error;
+      }
+    ) as CancellablePromise<T>;
 
   promise.cancel = () => {
     source.cancel("Query was cancelled");
@@ -41,48 +59,5 @@ export const customInstance = <T>(
 };
 
 // ✅ Tipos auxiliares usados pelo Orval
-export type ErrorType<Error> = AxiosError<Error>;
+export type ErrorType<T> = T;
 export type BodyType<BodyData> = BodyData;
-
-// ✅ Função genérica para chamadas diretas (handleAxiosRequest)
-interface IHandleAxiosRequest {
-  path: string;
-  method: Method;
-  headers?: AxiosHeaders;
-  data?: object;
-  withCredentials?: boolean;
-  params?: object;
-  errorMessage?: string;
-}
-
-export const handleAxiosRequest = async <T>({
-  path,
-  method,
-  headers,
-  data,
-  params,
-  errorMessage,
-}: IHandleAxiosRequest): Promise<T> => {
-  try {
-    const response = await AXIOS_INSTANCE.request<T>({
-      url: path,
-      method,
-      data,
-      params,
-      headers,
-    });
-
-    return response.data;
-  } catch (error) {
-    if (axios.isAxiosError(error)) {
-      throw new Error(
-        errorMessage ??
-          (error.response?.data?.message as string) ??
-          error.message ??
-          "Erro ao fazer requisição"
-      );
-    } else {
-      throw new Error(errorMessage ?? "Erro inesperado");
-    }
-  }
-};
