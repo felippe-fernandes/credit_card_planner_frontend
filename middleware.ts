@@ -14,16 +14,31 @@ const REDIRECT_WHEN_NOT_AUTHENTICATED_ROUTE = "/dashboard";
 export default function MiddlewareConfig(request: NextRequest) {
   const path = request.nextUrl.pathname;
 
-  const redirectUrl = request.nextUrl.clone();
-
   const publicRoute = publicRoutes.find((route) => route.path === path);
-  const authToken = request.cookies.get("sb_auth_token");
+  const authToken = request.cookies.get("auth_token");
+
+  if (path === "/") {
+    if (!authToken) {
+      const redirectUrl = request.nextUrl.clone();
+      redirectUrl.pathname = "/login";
+      return NextResponse.redirect(redirectUrl);
+    } else {
+      const redirectUrl = request.nextUrl.clone();
+      redirectUrl.pathname = "/dashboard";
+      return NextResponse.redirect(redirectUrl);
+    }
+  }
 
   if (!authToken && publicRoute) {
     return NextResponse.next();
   }
 
   if (!authToken && !publicRoute) {
+    if (path === REDIRECT_WHEN_NOT_AUTHENTICATED_ROUTE) {
+      return NextResponse.next();
+    }
+
+    const redirectUrl = request.nextUrl.clone();
     redirectUrl.pathname = REDIRECT_WHEN_NOT_AUTHENTICATED_ROUTE;
 
     return NextResponse.redirect(redirectUrl);
@@ -34,8 +49,9 @@ export default function MiddlewareConfig(request: NextRequest) {
     publicRoute &&
     publicRoute.whenAuthenticated === "redirect"
   ) {
+    const redirectUrl = request.nextUrl.clone();
     redirectUrl.pathname = "/";
-    return NextResponse.next();
+    return NextResponse.redirect(redirectUrl);
   }
 
   if (authToken && !publicRoute) {

@@ -8,7 +8,6 @@ import {
 import axios, { AxiosError, AxiosRequestConfig } from "axios";
 import { env } from "./env";
 
-// ✅ ÚNICA instância global de axios
 export const AXIOS_INSTANCE = axios.create({
   baseURL: env.NEXT_PUBLIC_API_BASE_URL,
   headers: {
@@ -17,12 +16,10 @@ export const AXIOS_INSTANCE = axios.create({
   withCredentials: true,
 });
 
-// ✅ Interface de tipo para cancelável
 interface CancellablePromise<T> extends Promise<T> {
   cancel: () => void;
 }
 
-// ✅ Função genérica para Orval (com cancelamento)
 export const customInstance = <T>(
   config: AxiosRequestConfig,
   options?: AxiosRequestConfig
@@ -58,6 +55,5 @@ export const customInstance = <T>(
   return promise;
 };
 
-// ✅ Tipos auxiliares usados pelo Orval
 export type ErrorType<T> = T;
 export type BodyType<BodyData> = BodyData;

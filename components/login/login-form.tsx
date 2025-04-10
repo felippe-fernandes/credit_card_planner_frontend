@@ -34,7 +34,13 @@ export function LoginForm({ className }: LoginFormProps) {
 
   const { mutate, error: loginError } = useAuthLogin({
     mutation: {
-      onSuccess: () => router.push("/dashboard"),
+      onSuccess: (response) => {
+        sessionStorage.setItem(
+          "expires_at",
+          response.data.expires_at?.toString() ?? ""
+        );
+        router.push("/dashboard");
+      },
     },
   });
 
