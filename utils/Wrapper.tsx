@@ -1,9 +1,12 @@
 "use client";
 
-import LoadingPage from "@/components/common/loader";
-import { AuthProvider } from "@/context/AuthContext";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import React, { Suspense, useState } from "react";
+import type React from "react";
+import { Suspense, useState } from "react";
+import LoadingPage from "@/components/common/loader";
+import { Toaster } from "@/components/ui/toaster";
+import { AuthProvider } from "@/context/AuthContext";
+import { ThemeProvider } from "@/context/ThemeContext";
 
 interface WrapperProps {
   children: React.ReactNode;
@@ -22,13 +25,18 @@ const Wrapper: React.FC<WrapperProps> = ({ children }) => {
             retry: false,
           },
         },
-      })
+      }),
   );
   return (
     <Suspense fallback={<LoadingPage />}>
-      <QueryClientProvider client={queryClient}>
-        <AuthProvider>{children}</AuthProvider>
-      </QueryClientProvider>
+      <ThemeProvider>
+        <QueryClientProvider client={queryClient}>
+          <AuthProvider>
+            {children}
+            <Toaster />
+          </AuthProvider>
+        </QueryClientProvider>
+      </ThemeProvider>
     </Suspense>
   );
 };

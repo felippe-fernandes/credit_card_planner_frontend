@@ -1,23 +1,23 @@
-import {
-  CardSchema,
-  CategorySchema,
-  DependentSchema,
-  InvoiceSchema,
-  TransactionSchema,
-  UserSchema,
+import type { z } from "zod";
+import type {
+	CardSchema,
+	CategorySchema,
+	DependentSchema,
+	InvoiceSchema,
+	TransactionSchema,
+	UserSchema,
 } from "@/schemas/entities";
-import { z } from "zod";
 
 export enum Role {
-  "USER",
-  "ADMIN",
-  "SUPER_ADMIN",
+	USER,
+	ADMIN,
+	SUPER_ADMIN,
 }
 
 export enum InvoiceStatus {
-  "PENDING",
-  "PAID",
-  "OVERDUE",
+	PENDING,
+	PAID,
+	OVERDUE,
 }
 
 export type Card = z.infer<typeof CardSchema>;
