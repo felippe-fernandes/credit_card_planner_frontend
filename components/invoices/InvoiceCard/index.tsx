@@ -39,9 +39,11 @@ export function InvoiceCard({
   onViewDetails,
 }: InvoiceCardProps) {
   const statusConfig = STATUS_CONFIG[invoice.status as InvoiceStatus];
-  const paymentProgress = (invoice.paidAmount / invoice.totalAmount) * 100;
+  const totalAmount = Number(invoice.totalAmount);
+  const paidAmount = Number(invoice.paidAmount);
+  const paymentProgress = (paidAmount / totalAmount) * 100;
   const isPaid = invoice.status === "PAID";
-  const remainingAmount = invoice.totalAmount - invoice.paidAmount;
+  const remainingAmount = totalAmount - paidAmount;
 
   return (
     <Card className={isPaid ? "border-green-200 dark:border-green-900" : ""}>
@@ -73,7 +75,7 @@ export function InvoiceCard({
             <p className="text-xs text-muted-foreground">Valor Total</p>
             <p className="text-lg font-bold">
               R${" "}
-              {invoice.totalAmount.toLocaleString("pt-BR", {
+              {totalAmount.toLocaleString("pt-BR", {
                 minimumFractionDigits: 2,
               })}
             </p>
@@ -82,7 +84,7 @@ export function InvoiceCard({
             <p className="text-xs text-muted-foreground">Valor Pago</p>
             <p className="text-lg font-bold text-green-600 dark:text-green-500">
               R${" "}
-              {invoice.paidAmount.toLocaleString("pt-BR", {
+              {paidAmount.toLocaleString("pt-BR", {
                 minimumFractionDigits: 2,
               })}
             </p>

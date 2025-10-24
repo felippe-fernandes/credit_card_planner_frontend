@@ -22,12 +22,14 @@ interface TransactionFormProps {
   onSubmit: (data: CreateTransactionDto) => void;
   defaultValues?: Partial<Transaction>;
   isLoading?: boolean;
+  formId?: string;
 }
 
 export function TransactionForm({
   onSubmit,
   defaultValues,
   isLoading = false,
+  formId,
 }: TransactionFormProps) {
   const {
     register,
@@ -42,7 +44,7 @@ export function TransactionForm({
       purchaseName: defaultValues?.purchaseName || "",
       purchaseCategory: defaultValues?.purchaseCategory || "",
       description: defaultValues?.description || "",
-      amount: defaultValues?.amount || 0,
+      amount: defaultValues?.amount || "0",
       installments: defaultValues?.installments || 1,
       purchaseDate: defaultValues?.purchaseDate
         ? new Date(defaultValues.purchaseDate).toISOString().split("T")[0]
@@ -63,29 +65,35 @@ export function TransactionForm({
   const amount = watch("amount");
 
   // Calculate installment value
-  const installmentValue = installments > 0 ? (amount / installments).toFixed(2) : "0.00";
+  const installmentValue = installments > 0 && amount ? (Number(amount) / installments).toFixed(2) : "0.00";
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+    <form id={formId} onSubmit={handleSubmit(onSubmit)} className="space-y-4">
       {/* Card Selection */}
       <div className="space-y-2">
         <Label htmlFor="cardId">Cartão *</Label>
-        <Select
-          value={selectedCardId}
-          onValueChange={(value) => setValue("cardId", value)}
-          disabled={isLoading || cardsLoading}
-        >
-          <SelectTrigger>
-            <SelectValue placeholder="Selecione o cartão" />
-          </SelectTrigger>
-          <SelectContent>
-            {cards.map((card) => (
-              <SelectItem key={card.id} value={card.id}>
-                {card.name} - {card.bank}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+        {cardsLoading ? (
+          <div className="h-10 rounded-md border border-input bg-background px-3 py-2">
+            <div className="h-4 w-32 bg-muted animate-pulse rounded" />
+          </div>
+        ) : (
+          <Select
+            value={selectedCardId}
+            onValueChange={(value) => setValue("cardId", value)}
+            disabled={isLoading}
+          >
+            <SelectTrigger>
+              <SelectValue placeholder="Selecione o cartão" />
+            </SelectTrigger>
+            <SelectContent>
+              {cards.map((card) => (
+                <SelectItem key={card.id} value={card.id}>
+                  {card.name} - {card.bank}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        )}
         {errors.cardId && (
           <p className="text-sm text-destructive">{errors.cardId.message}</p>
         )}
@@ -108,25 +116,31 @@ export function TransactionForm({
       {/* Category Selection */}
       <div className="space-y-2">
         <Label htmlFor="purchaseCategory">Categoria *</Label>
-        <Select
-          value={selectedCategoryName}
-          onValueChange={(value) => setValue("purchaseCategory", value)}
-          disabled={isLoading || categoriesLoading}
-        >
-          <SelectTrigger>
-            <SelectValue placeholder="Selecione a categoria" />
-          </SelectTrigger>
-          <SelectContent>
-            {categories.map((category) => (
-              <SelectItem key={category.name} value={category.name}>
-                <div className="flex items-center gap-2">
-                  <span>{category.icon}</span>
-                  <span>{category.name}</span>
-                </div>
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+        {categoriesLoading ? (
+          <div className="h-10 rounded-md border border-input bg-background px-3 py-2">
+            <div className="h-4 w-32 bg-muted animate-pulse rounded" />
+          </div>
+        ) : (
+          <Select
+            value={selectedCategoryName}
+            onValueChange={(value) => setValue("purchaseCategory", value)}
+            disabled={isLoading}
+          >
+            <SelectTrigger>
+              <SelectValue placeholder="Selecione a categoria" />
+            </SelectTrigger>
+            <SelectContent>
+              {categories.map((category) => (
+                <SelectItem key={category.name} value={category.name}>
+                  <div className="flex items-center gap-2">
+                    <span>{category.icon}</span>
+                    <span>{category.name}</span>
+                  </div>
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        )}
         {errors.purchaseCategory && (
           <p className="text-sm text-destructive">{errors.purchaseCategory.message}</p>
         )}
@@ -142,7 +156,7 @@ export function TransactionForm({
             step="0.01"
             min="0.01"
             placeholder="100.00"
-            {...register("amount", { valueAsNumber: true })}
+            {...register("amount")}
             disabled={isLoading}
           />
           {errors.amount && (
@@ -193,25 +207,31 @@ export function TransactionForm({
       {/* Dependent Selection (Optional) */}
       <div className="space-y-2">
         <Label htmlFor="dependentId">Dependente (Opcional)</Label>
-        <Select
-          value={selectedDependentId || "none"}
-          onValueChange={(value) =>
-            setValue("dependentId", value === "none" ? undefined : value)
-          }
-          disabled={isLoading || dependentsLoading}
-        >
-          <SelectTrigger>
-            <SelectValue placeholder="Nenhum" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="none">Nenhum</SelectItem>
-            {dependents.map((dependent) => (
-              <SelectItem key={dependent.id} value={dependent.id}>
-                {dependent.name}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+        {dependentsLoading ? (
+          <div className="h-10 rounded-md border border-input bg-background px-3 py-2">
+            <div className="h-4 w-32 bg-muted animate-pulse rounded" />
+          </div>
+        ) : (
+          <Select
+            value={selectedDependentId || "none"}
+            onValueChange={(value) =>
+              setValue("dependentId", value === "none" ? undefined : value)
+            }
+            disabled={isLoading}
+          >
+            <SelectTrigger>
+              <SelectValue placeholder="Nenhum" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="none">Nenhum</SelectItem>
+              {dependents.map((dependent) => (
+                <SelectItem key={dependent.id} value={dependent.id}>
+                  {dependent.name}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        )}
         {errors.dependentId && (
           <p className="text-sm text-destructive">{errors.dependentId.message}</p>
         )}

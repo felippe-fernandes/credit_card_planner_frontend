@@ -17,11 +17,12 @@ interface FormDialogProps {
   title: string;
   description?: string;
   children: ReactNode;
-  onSubmit: () => void;
+  onSubmit?: () => void;
   onCancel?: () => void;
   isLoading?: boolean;
   submitLabel?: string;
   cancelLabel?: string;
+  formId?: string;
 }
 
 export function FormDialog({
@@ -35,6 +36,7 @@ export function FormDialog({
   isLoading = false,
   submitLabel = "Salvar",
   cancelLabel = "Cancelar",
+  formId,
 }: FormDialogProps) {
   const handleCancel = () => {
     if (onCancel) {
@@ -62,7 +64,12 @@ export function FormDialog({
           >
             {cancelLabel}
           </Button>
-          <Button type="button" onClick={onSubmit} disabled={isLoading}>
+          <Button
+            type={formId ? "submit" : "button"}
+            form={formId}
+            onClick={formId ? undefined : onSubmit}
+            disabled={isLoading}
+          >
             {isLoading ? "Salvando..." : submitLabel}
           </Button>
         </DialogFooter>

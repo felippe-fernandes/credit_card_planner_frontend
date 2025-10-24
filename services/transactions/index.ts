@@ -1,6 +1,6 @@
 import { handleAxiosRequest } from "@/lib/axios";
 import { IResponseBase } from "@/types/api";
-import { Transaction, CreateTransactionDto, UpdateTransactionDto } from "@/types/entities/transaction";
+import { CreateTransactionDto, Transaction, UpdateTransactionDto } from "@/types/entities/transaction";
 
 export class TransactionService {
   useMock: boolean;

@@ -1,17 +1,9 @@
 "use client";
 
 import { Category } from "@/types/entities/category";
-import { Card, CardContent } from "@/components/ui/card";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
-import { MoreVertical, Pencil, Trash2 } from "lucide-react";
+import { Pencil, Trash2 } from "lucide-react";
+import { useState } from "react";
 
 interface CategoryCardProps {
   category: Category;
@@ -26,61 +18,59 @@ export function CategoryCard({
   onDelete,
   isDefault = false,
 }: CategoryCardProps) {
-  return (
-    <Card className="relative overflow-hidden hover:shadow-md transition-shadow">
-      <CardContent className="p-6">
-        <div className="flex items-start justify-between">
-          <div className="flex items-center gap-3 flex-1">
-            <div
-              className="flex h-12 w-12 items-center justify-center rounded-full text-2xl shadow-sm flex-shrink-0"
-              style={{ backgroundColor: category.color }}
-            >
-              {category.icon}
-            </div>
-            <div className="flex flex-col min-w-0">
-              <h3 className="font-semibold truncate">{category.name}</h3>
-              <p className="text-xs text-muted-foreground">{category.color}</p>
-            </div>
-          </div>
+  const [isHovered, setIsHovered] = useState(false);
 
-          {!isDefault && (onEdit || onDelete) && (
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
-                  <MoreVertical className="h-4 w-4" />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
-                <DropdownMenuLabel>Ações</DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                {onEdit && (
-                  <DropdownMenuItem onClick={() => onEdit(category)}>
-                    <Pencil className="mr-2 h-4 w-4" />
-                    Editar
-                  </DropdownMenuItem>
-                )}
-                {onDelete && (
-                  <DropdownMenuItem
-                    onClick={() => onDelete(category)}
-                    className="text-destructive focus:text-destructive"
-                  >
-                    <Trash2 className="mr-2 h-4 w-4" />
-                    Excluir
-                  </DropdownMenuItem>
-                )}
-              </DropdownMenuContent>
-            </DropdownMenu>
+  return (
+    <div
+      className="group relative flex items-center gap-3 px-4 py-3 rounded-lg border border-border/40 hover:border-border transition-colors"
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+    >
+      {/* Icon */}
+      <div
+        className="flex h-9 w-9 items-center justify-center rounded-md text-lg flex-shrink-0"
+        style={{ backgroundColor: category.color + "20" }}
+      >
+        <span style={{ filter: "brightness(0.8)" }}>{category.icon}</span>
+      </div>
+
+      {/* Name */}
+      <div className="flex-1 min-w-0">
+        <p className="text-sm font-medium truncate">{category.name}</p>
+        {isDefault && (
+          <span className="text-xs text-muted-foreground">Padrão</span>
+        )}
+      </div>
+
+      {/* Actions - show on hover */}
+      {!isDefault && (onEdit || onDelete) && (
+        <div
+          className={`flex items-center gap-1 transition-opacity ${
+            isHovered ? "opacity-100" : "opacity-0"
+          }`}
+        >
+          {onEdit && (
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-7 w-7"
+              onClick={() => onEdit(category)}
+            >
+              <Pencil className="h-3.5 w-3.5" />
+            </Button>
+          )}
+          {onDelete && (
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-7 w-7 text-destructive hover:text-destructive hover:bg-destructive/10"
+              onClick={() => onDelete(category)}
+            >
+              <Trash2 className="h-3.5 w-3.5" />
+            </Button>
           )}
         </div>
-
-        {isDefault && (
-          <div className="mt-3 pt-3 border-t">
-            <span className="text-xs text-muted-foreground">
-              Categoria padrão
-            </span>
-          </div>
-        )}
-      </CardContent>
-    </Card>
+      )}
+    </div>
   );
 }

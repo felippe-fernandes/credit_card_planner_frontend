@@ -6,10 +6,10 @@ export interface Transaction {
   purchaseName: string;
   purchaseCategory: string;
   description?: string;
-  amount: number;
+  amount: string; // Decimal as string
   purchaseDate: string;
   installments: number;
-  installmentsValue: number[];
+  installmentsValue: string[]; // Decimal[] as string[]
   installmentDates: string[];
   createdAt: string;
   editedAt?: string;
@@ -20,9 +20,9 @@ export interface CreateTransactionDto {
   purchaseName: string;
   purchaseCategory: string;
   description?: string;
-  amount: number;
+  amount: string; // Send as string for Decimal
   installments: number;
-  installmentValues?: number[];
+  installmentValues?: string[];
   purchaseDate?: string;
   dependentId?: string;
 }
@@ -32,9 +32,9 @@ export interface UpdateTransactionDto {
   purchaseName?: string;
   purchaseCategory?: string;
   description?: string;
-  amount?: number;
+  amount?: string; // Send as string for Decimal
   installments?: number;
-  installmentValues?: number[];
+  installmentValues?: string[];
   purchaseDate?: string;
   dependentId?: string;
 }

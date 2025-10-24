@@ -13,12 +13,14 @@ interface CategoryFormProps {
   onSubmit: (data: CreateCategoryDto) => void;
   defaultValues?: Partial<Category>;
   isLoading?: boolean;
+  formId?: string;
 }
 
 export function CategoryForm({
   onSubmit,
   defaultValues,
   isLoading = false,
+  formId,
 }: CategoryFormProps) {
   const {
     register,
@@ -39,7 +41,7 @@ export function CategoryForm({
   const selectedColor = watch("color");
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+    <form id={formId} onSubmit={handleSubmit(onSubmit)} className="space-y-4">
       {/* Name */}
       <div className="space-y-2">
         <Label htmlFor="name">Nome da Categoria *</Label>

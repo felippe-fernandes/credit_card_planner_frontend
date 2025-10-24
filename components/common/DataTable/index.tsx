@@ -76,6 +76,12 @@ export function DataTable<T extends Record<string, any>>({
   };
 
   if (isLoading) {
+    // Generate random widths for more realistic skeleton
+    const getRandomWidth = () => {
+      const widths = ["w-20", "w-24", "w-32", "w-40", "w-48", "w-full"];
+      return widths[Math.floor(Math.random() * widths.length)];
+    };
+
     return (
       <div className="rounded-md border">
         <Table>
@@ -90,11 +96,11 @@ export function DataTable<T extends Record<string, any>>({
             </TableRow>
           </TableHeader>
           <TableBody>
-            {Array.from({ length: 5 }).map((_, index) => (
-              <TableRow key={index}>
-                {columns.map((column) => (
+            {Array.from({ length: 5 }).map((_, rowIndex) => (
+              <TableRow key={rowIndex}>
+                {columns.map((column, colIndex) => (
                   <TableCell key={column.id}>
-                    <Skeleton className="h-5 w-full" />
+                    <Skeleton className={`h-5 ${getRandomWidth()}`} />
                   </TableCell>
                 ))}
                 {actions && actions.length > 0 && (

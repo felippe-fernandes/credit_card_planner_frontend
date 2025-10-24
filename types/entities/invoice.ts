@@ -6,8 +6,8 @@ export interface Invoice {
   cardId: string;
   month: number;
   year: number;
-  totalAmount: number;
-  paidAmount: number;
+  totalAmount: string; // Decimal as string
+  paidAmount: string; // Decimal as string
   dueDate: string;
   status: InvoiceStatus;
   createdAt: string;
@@ -15,12 +15,12 @@ export interface Invoice {
 }
 
 export interface UpdateInvoiceDto {
-  totalAmount?: number;
-  paidAmount?: number;
+  totalAmount?: string;
+  paidAmount?: string;
   dueDate?: string;
   status?: InvoiceStatus;
 }
 
 export interface MarkInvoiceAsPaidDto {
-  paidAmount: number;
+  paidAmount: string; // Send as string for Decimal
 }

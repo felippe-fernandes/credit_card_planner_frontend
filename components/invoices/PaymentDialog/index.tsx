@@ -35,7 +35,9 @@ export function PaymentDialog({
 
   if (!invoice) return null;
 
-  const remainingAmount = invoice.totalAmount - invoice.paidAmount;
+  const totalAmount = Number(invoice.totalAmount);
+  const paidAmountNumber = Number(invoice.paidAmount);
+  const remainingAmount = totalAmount - paidAmountNumber;
 
   const handleConfirm = () => {
     if (useFullAmount) {
@@ -69,13 +71,13 @@ export function PaymentDialog({
             <div className="flex justify-between text-sm">
               <span className="text-muted-foreground">Valor Total:</span>
               <span className="font-medium">
-                R$ {invoice.totalAmount.toLocaleString("pt-BR", { minimumFractionDigits: 2 })}
+                R$ {totalAmount.toLocaleString("pt-BR", { minimumFractionDigits: 2 })}
               </span>
             </div>
             <div className="flex justify-between text-sm">
               <span className="text-muted-foreground">Já Pago:</span>
               <span className="font-medium text-green-600">
-                R$ {invoice.paidAmount.toLocaleString("pt-BR", { minimumFractionDigits: 2 })}
+                R$ {paidAmountNumber.toLocaleString("pt-BR", { minimumFractionDigits: 2 })}
               </span>
             </div>
             <div className="flex justify-between text-sm border-t pt-2">

@@ -28,7 +28,7 @@ export default function InvoicesPage() {
   const [selectedInvoice, setSelectedInvoice] = useState<Invoice | null>(null);
 
   // Fetch invoices
-  const { data: invoices = [], isLoading } = useInvoices(filters);
+  const { data: invoices = [], isLoading, refetch, isRefetching } = useInvoices(filters);
 
   // Mutations
   const markAsPaidMutation = useMarkInvoiceAsPaid();
@@ -80,6 +80,8 @@ export default function InvoicesPage() {
       <PageHeader
         title="Faturas"
         description="Acompanhe e gerencie as faturas dos seus cartões"
+        onRefresh={() => refetch()}
+        isRefreshing={isRefetching}
       />
 
       {/* Filters */}
@@ -96,35 +98,46 @@ export default function InvoicesPage() {
       </div>
 
       {/* Summary */}
-      {!isLoading && invoices.length > 0 && (
+      {isLoading ? (
         <div className="grid grid-cols-1 sm:grid-cols-4 gap-4">
-          <div className="p-4 rounded-lg border bg-card">
-            <p className="text-sm text-muted-foreground">Total de Faturas</p>
-            <p className="text-2xl font-bold">{invoices.length}</p>
-          </div>
-          <div className="p-4 rounded-lg border bg-card">
-            <p className="text-sm text-muted-foreground">Valor Total</p>
-            <p className="text-2xl font-bold">
-              R${" "}
-              {invoices
-                .reduce((sum, inv) => sum + inv.totalAmount, 0)
-                .toLocaleString("pt-BR", { minimumFractionDigits: 2 })}
-            </p>
-          </div>
-          <div className="p-4 rounded-lg border bg-card">
-            <p className="text-sm text-muted-foreground">Valor Pago</p>
-            <p className="text-2xl font-bold text-green-600">
-              R${" "}
-              {invoices
-                .reduce((sum, inv) => sum + inv.paidAmount, 0)
-                .toLocaleString("pt-BR", { minimumFractionDigits: 2 })}
-            </p>
-          </div>
-          <div className="p-4 rounded-lg border bg-card">
-            <p className="text-sm text-muted-foreground">Pendentes</p>
-            <p className="text-2xl font-bold text-yellow-600">{pendingInvoices.length}</p>
-          </div>
+          {Array.from({ length: 4 }).map((_, i) => (
+            <div key={i} className="p-4 rounded-lg border bg-card space-y-2">
+              <Skeleton className="h-4 w-28" />
+              <Skeleton className="h-8 w-16" />
+            </div>
+          ))}
         </div>
+      ) : (
+        invoices.length > 0 && (
+          <div className="grid grid-cols-1 sm:grid-cols-4 gap-4">
+            <div className="p-4 rounded-lg border bg-card">
+              <p className="text-sm text-muted-foreground">Total de Faturas</p>
+              <p className="text-2xl font-bold">{invoices.length}</p>
+            </div>
+            <div className="p-4 rounded-lg border bg-card">
+              <p className="text-sm text-muted-foreground">Valor Total</p>
+              <p className="text-2xl font-bold">
+                R${" "}
+                {invoices
+                  .reduce((sum, inv) => sum + Number(inv.totalAmount), 0)
+                  .toLocaleString("pt-BR", { minimumFractionDigits: 2 })}
+              </p>
+            </div>
+            <div className="p-4 rounded-lg border bg-card">
+              <p className="text-sm text-muted-foreground">Valor Pago</p>
+              <p className="text-2xl font-bold text-green-600">
+                R${" "}
+                {invoices
+                  .reduce((sum, inv) => sum + Number(inv.paidAmount), 0)
+                  .toLocaleString("pt-BR", { minimumFractionDigits: 2 })}
+              </p>
+            </div>
+            <div className="p-4 rounded-lg border bg-card">
+              <p className="text-sm text-muted-foreground">Pendentes</p>
+              <p className="text-2xl font-bold text-yellow-600">{pendingInvoices.length}</p>
+            </div>
+          </div>
+        )
       )}
 
       {/* Tabs */}

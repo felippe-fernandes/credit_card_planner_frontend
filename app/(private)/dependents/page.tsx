@@ -31,7 +31,7 @@ export default function DependentsPage() {
   const [sortDirection, setSortDirection] = useState<"asc" | "desc">("asc");
 
   // Fetch dependents
-  const { data: dependents = [], isLoading } = useDependents({
+  const { data: dependents = [], isLoading, refetch, isRefetching } = useDependents({
     name: searchTerm || undefined,
   });
 
@@ -171,6 +171,8 @@ export default function DependentsPage() {
           onClick: () => setCreateDialogOpen(true),
           icon: Users,
         }}
+        onRefresh={() => refetch()}
+        isRefreshing={isRefetching}
       />
 
       {/* Search */}
@@ -204,17 +206,13 @@ export default function DependentsPage() {
         title="Novo Dependente"
         description="Adicione um dependente para acompanhar gastos"
         isLoading={createMutation.isPending}
-        onSubmit={() => {
-          const form = document.getElementById("dependent-form") as HTMLFormElement;
-          form?.requestSubmit();
-        }}
+        formId="create-dependent-form"
       >
-        <div id="dependent-form">
-          <DependentForm
-            onSubmit={handleCreate}
-            isLoading={createMutation.isPending}
-          />
-        </div>
+        <DependentForm
+          formId="create-dependent-form"
+          onSubmit={handleCreate}
+          isLoading={createMutation.isPending}
+        />
       </FormDialog>
 
       {/* Edit Dialog */}
@@ -225,18 +223,14 @@ export default function DependentsPage() {
           title="Editar Dependente"
           description="Atualize as informações do dependente"
           isLoading={updateMutation.isPending}
-          onSubmit={() => {
-            const form = document.getElementById("edit-dependent-form") as HTMLFormElement;
-            form?.requestSubmit();
-          }}
+          formId="edit-dependent-form"
         >
-          <div id="edit-dependent-form">
-            <DependentForm
-              onSubmit={handleUpdate}
-              defaultValues={selectedDependent}
-              isLoading={updateMutation.isPending}
-            />
-          </div>
+          <DependentForm
+            formId="edit-dependent-form"
+            onSubmit={handleUpdate}
+            defaultValues={selectedDependent}
+            isLoading={updateMutation.isPending}
+          />
         </FormDialog>
       )}
 

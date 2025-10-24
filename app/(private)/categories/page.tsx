@@ -30,7 +30,7 @@ export default function CategoriesPage() {
   const [selectedCategory, setSelectedCategory] = useState<Category | null>(null);
 
   // Fetch categories
-  const { data: categories = [], isLoading } = useCategories({
+  const { data: categories = [], isLoading, refetch, isRefetching } = useCategories({
     name: searchTerm || undefined,
   });
 
@@ -113,6 +113,8 @@ export default function CategoriesPage() {
           onClick: () => setCreateDialogOpen(true),
           icon: Plus,
         }}
+        onRefresh={() => refetch()}
+        isRefreshing={isRefetching}
       />
 
       {/* Search and Actions */}
@@ -137,11 +139,11 @@ export default function CategoriesPage() {
         )}
       </div>
 
-      {/* Categories Grid */}
+      {/* Categories List */}
       {isLoading ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+        <div className="space-y-2">
           {Array.from({ length: 8 }).map((_, index) => (
-            <Skeleton key={index} className="h-32" />
+            <Skeleton key={index} className="h-14" />
           ))}
         </div>
       ) : filteredCategories.length === 0 ? (
@@ -175,16 +177,18 @@ export default function CategoriesPage() {
           )}
         </div>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-          {filteredCategories.map((category) => (
-            <CategoryCard
-              key={category.name}
-              category={category}
-              onEdit={handleEdit}
-              onDelete={handleDeleteClick}
-              isDefault={isDefaultCategory(category.name)}
-            />
-          ))}
+        <div className="max-w-3xl">
+          <div className="space-y-2">
+            {filteredCategories.map((category) => (
+              <CategoryCard
+                key={category.name}
+                category={category}
+                onEdit={handleEdit}
+                onDelete={handleDeleteClick}
+                isDefault={isDefaultCategory(category.name)}
+              />
+            ))}
+          </div>
         </div>
       )}
 
@@ -195,17 +199,13 @@ export default function CategoriesPage() {
         title="Nova Categoria"
         description="Crie uma categoria personalizada para organizar seus gastos"
         isLoading={createMutation.isPending}
-        onSubmit={() => {
-          const form = document.getElementById("category-form") as HTMLFormElement;
-          form?.requestSubmit();
-        }}
+        formId="create-category-form"
       >
-        <div id="category-form">
-          <CategoryForm
-            onSubmit={handleCreate}
-            isLoading={createMutation.isPending}
-          />
-        </div>
+        <CategoryForm
+          formId="create-category-form"
+          onSubmit={handleCreate}
+          isLoading={createMutation.isPending}
+        />
       </FormDialog>
 
       {/* Edit Dialog */}
@@ -216,18 +216,14 @@ export default function CategoriesPage() {
           title="Editar Categoria"
           description="Atualize o ícone e a cor da categoria"
           isLoading={updateMutation.isPending}
-          onSubmit={() => {
-            const form = document.getElementById("edit-category-form") as HTMLFormElement;
-            form?.requestSubmit();
-          }}
+          formId="edit-category-form"
         >
-          <div id="edit-category-form">
-            <CategoryForm
-              onSubmit={handleUpdate}
-              defaultValues={selectedCategory}
-              isLoading={updateMutation.isPending}
-            />
-          </div>
+          <CategoryForm
+            formId="edit-category-form"
+            onSubmit={handleUpdate}
+            defaultValues={selectedCategory}
+            isLoading={updateMutation.isPending}
+          />
         </FormDialog>
       )}
 

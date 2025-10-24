@@ -1,7 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { LucideIcon } from "lucide-react";
+import { LucideIcon, RefreshCw } from "lucide-react";
 import { ReactNode } from "react";
 
 interface PageHeaderProps {
@@ -12,6 +12,8 @@ interface PageHeaderProps {
     onClick: () => void;
     icon?: LucideIcon;
   };
+  onRefresh?: () => void;
+  isRefreshing?: boolean;
   breadcrumbs?: Array<{
     label: string;
     href?: string;
@@ -23,6 +25,8 @@ export function PageHeader({
   title,
   description,
   action,
+  onRefresh,
+  isRefreshing = false,
   breadcrumbs,
   children,
 }: PageHeaderProps) {
@@ -56,12 +60,25 @@ export function PageHeader({
           )}
         </div>
 
-        {action && (
-          <Button onClick={action.onClick} className="flex items-center gap-2">
-            {action.icon && <action.icon className="h-4 w-4" />}
-            {action.label}
-          </Button>
-        )}
+        <div className="flex items-center gap-2">
+          {onRefresh && (
+            <Button
+              variant="outline"
+              size="icon"
+              onClick={onRefresh}
+              disabled={isRefreshing}
+              title="Atualizar"
+            >
+              <RefreshCw className={`h-4 w-4 ${isRefreshing ? "animate-spin" : ""}`} />
+            </Button>
+          )}
+          {action && (
+            <Button onClick={action.onClick} className="flex items-center gap-2">
+              {action.icon && <action.icon className="h-4 w-4" />}
+              {action.label}
+            </Button>
+          )}
+        </div>
       </div>
 
       {children}

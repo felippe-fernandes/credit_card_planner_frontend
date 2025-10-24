@@ -40,7 +40,7 @@ export default function CardsPage() {
   const [sortDirection, setSortDirection] = useState<"asc" | "desc">("asc");
 
   // Fetch cards with filters
-  const { data: cards = [], isLoading } = useCards({
+  const { data: cards = [], isLoading, refetch, isRefetching } = useCards({
     ...filters,
     name: searchTerm || undefined,
   });
@@ -118,7 +118,7 @@ export default function CardsPage() {
       header: "Limite",
       cell: (row) => (
         <span className="font-medium">
-          R$ {row.limit.toLocaleString("pt-BR", { minimumFractionDigits: 2 })}
+          R$ {Number(row.limit).toLocaleString("pt-BR", { minimumFractionDigits: 2 })}
         </span>
       ),
       sortable: true,
@@ -127,11 +127,11 @@ export default function CardsPage() {
       id: "availableLimit",
       header: "Disponível",
       cell: (row) => {
-        const percentage = (row.availableLimit / row.limit) * 100;
+        const percentage = (Number(row.availableLimit) / Number(row.limit)) * 100;
         return (
           <div className="space-y-1">
             <span className="text-sm">
-              R$ {row.availableLimit.toLocaleString("pt-BR", { minimumFractionDigits: 2 })}
+              R$ {Number(row.availableLimit).toLocaleString("pt-BR", { minimumFractionDigits: 2 })}
             </span>
             <div className="h-1.5 w-full bg-secondary rounded-full overflow-hidden">
               <div
@@ -228,6 +228,8 @@ export default function CardsPage() {
           onClick: () => setCreateDialogOpen(true),
           icon: CreditCard,
         }}
+        onRefresh={() => refetch()}
+        isRefreshing={isRefetching}
       />
 
       {/* Search and Filters */}
@@ -270,18 +272,13 @@ export default function CardsPage() {
         title="Novo Cartão"
         description="Adicione um novo cartão de crédito"
         isLoading={createMutation.isPending}
-        onSubmit={() => {
-          // Form will handle submission via handleSubmit
-          const form = document.getElementById("card-form") as HTMLFormElement;
-          form?.requestSubmit();
-        }}
+        formId="create-card-form"
       >
-        <div id="card-form">
-          <CardForm
-            onSubmit={handleCreate}
-            isLoading={createMutation.isPending}
-          />
-        </div>
+        <CardForm
+          formId="create-card-form"
+          onSubmit={handleCreate}
+          isLoading={createMutation.isPending}
+        />
       </FormDialog>
 
       {/* Edit Dialog */}
@@ -292,18 +289,14 @@ export default function CardsPage() {
           title="Editar Cartão"
           description="Atualize as informações do cartão"
           isLoading={updateMutation.isPending}
-          onSubmit={() => {
-            const form = document.getElementById("edit-card-form") as HTMLFormElement;
-            form?.requestSubmit();
-          }}
+          formId="edit-card-form"
         >
-          <div id="edit-card-form">
-            <CardForm
-              onSubmit={handleUpdate}
-              defaultValues={selectedCard}
-              isLoading={updateMutation.isPending}
-            />
-          </div>
+          <CardForm
+            formId="edit-card-form"
+            onSubmit={handleUpdate}
+            defaultValues={selectedCard}
+            isLoading={updateMutation.isPending}
+          />
         </FormDialog>
       )}
 

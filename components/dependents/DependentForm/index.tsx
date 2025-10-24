@@ -11,12 +11,14 @@ interface DependentFormProps {
   onSubmit: (data: CreateDependentDto) => void;
   defaultValues?: Partial<Dependent>;
   isLoading?: boolean;
+  formId?: string;
 }
 
 export function DependentForm({
   onSubmit,
   defaultValues,
   isLoading = false,
+  formId,
 }: DependentFormProps) {
   const {
     register,
@@ -30,7 +32,7 @@ export function DependentForm({
   });
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+    <form id={formId} onSubmit={handleSubmit(onSubmit)} className="space-y-4">
       <div className="space-y-2">
         <Label htmlFor="name">Nome do Dependente *</Label>
         <Input

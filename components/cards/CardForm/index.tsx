@@ -6,18 +6,13 @@ import { createCardSchema } from "@/schemas/api/card.schema";
 import { CreateCardDto, Card } from "@/types/entities/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { ComboboxWithCustom } from "@/components/common/ComboboxWithCustom";
 
 interface CardFormProps {
   onSubmit: (data: CreateCardDto) => void;
   defaultValues?: Partial<Card>;
   isLoading?: boolean;
+  formId?: string;
 }
 
 const CARD_FLAGS = [
@@ -48,6 +43,7 @@ export function CardForm({
   onSubmit,
   defaultValues,
   isLoading = false,
+  formId,
 }: CardFormProps) {
   const {
     register,
@@ -61,7 +57,7 @@ export function CardForm({
       name: defaultValues?.name || "",
       bank: defaultValues?.bank || "",
       flag: defaultValues?.flag || "",
-      limit: defaultValues?.limit || 0,
+      limit: defaultValues?.limit || "0",
       dueDay: defaultValues?.dueDay || 1,
       payDay: defaultValues?.payDay || 1,
     },
@@ -71,7 +67,7 @@ export function CardForm({
   const selectedBank = watch("bank");
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+    <form id={formId} onSubmit={handleSubmit(onSubmit)} className="space-y-4">
       {/* Name */}
       <div className="space-y-2">
         <Label htmlFor="name">Nome do Cartão *</Label>
@@ -87,52 +83,30 @@ export function CardForm({
       </div>
 
       {/* Bank */}
-      <div className="space-y-2">
-        <Label htmlFor="bank">Banco *</Label>
-        <Select
-          value={selectedBank}
-          onValueChange={(value) => setValue("bank", value)}
-          disabled={isLoading}
-        >
-          <SelectTrigger>
-            <SelectValue placeholder="Selecione o banco" />
-          </SelectTrigger>
-          <SelectContent>
-            {COMMON_BANKS.map((bank) => (
-              <SelectItem key={bank} value={bank}>
-                {bank}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-        {errors.bank && (
-          <p className="text-sm text-destructive">{errors.bank.message}</p>
-        )}
-      </div>
+      <ComboboxWithCustom
+        label="Banco *"
+        value={selectedBank}
+        onValueChange={(value) => setValue("bank", value)}
+        options={COMMON_BANKS}
+        placeholder="Selecione o banco"
+        emptyText="Nenhum banco encontrado."
+        addCustomLabel="Adicionar banco personalizado"
+        disabled={isLoading}
+        error={errors.bank?.message}
+      />
 
       {/* Flag */}
-      <div className="space-y-2">
-        <Label htmlFor="flag">Bandeira *</Label>
-        <Select
-          value={selectedFlag}
-          onValueChange={(value) => setValue("flag", value)}
-          disabled={isLoading}
-        >
-          <SelectTrigger>
-            <SelectValue placeholder="Selecione a bandeira" />
-          </SelectTrigger>
-          <SelectContent>
-            {CARD_FLAGS.map((flag) => (
-              <SelectItem key={flag} value={flag}>
-                {flag}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-        {errors.flag && (
-          <p className="text-sm text-destructive">{errors.flag.message}</p>
-        )}
-      </div>
+      <ComboboxWithCustom
+        label="Bandeira *"
+        value={selectedFlag}
+        onValueChange={(value) => setValue("flag", value)}
+        options={CARD_FLAGS}
+        placeholder="Selecione a bandeira"
+        emptyText="Nenhuma bandeira encontrada."
+        addCustomLabel="Adicionar bandeira personalizada"
+        disabled={isLoading}
+        error={errors.flag?.message}
+      />
 
       {/* Limit */}
       <div className="space-y-2">
@@ -143,7 +117,7 @@ export function CardForm({
           step="0.01"
           min="0"
           placeholder="5000.00"
-          {...register("limit", { valueAsNumber: true })}
+          {...register("limit")}
           disabled={isLoading}
         />
         {errors.limit && (

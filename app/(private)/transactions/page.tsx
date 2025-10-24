@@ -18,6 +18,7 @@ import {
 import { Transaction, CreateTransactionDto } from "@/types/entities/transaction";
 import { ShoppingCart, Pencil, Trash2 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { Skeleton } from "@/components/ui/skeleton";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 
@@ -41,7 +42,7 @@ export default function TransactionsPage() {
   const [sortDirection, setSortDirection] = useState<"asc" | "desc">("asc");
 
   // Fetch transactions
-  const { data: transactions = [], isLoading } = useTransactions({
+  const { data: transactions = [], isLoading, refetch, isRefetching } = useTransactions({
     ...filters,
     purchaseName: searchTerm || undefined,
   });
@@ -127,7 +128,7 @@ export default function TransactionsPage() {
       header: "Valor",
       cell: (row) => (
         <span className="font-medium">
-          R$ {row.amount.toLocaleString("pt-BR", { minimumFractionDigits: 2 })}
+          R$ {Number(row.amount).toLocaleString("pt-BR", { minimumFractionDigits: 2 })}
         </span>
       ),
       sortable: true,
@@ -139,7 +140,7 @@ export default function TransactionsPage() {
         if (row.installments === 1) {
           return <span className="text-muted-foreground">À vista</span>;
         }
-        const installmentValue = row.amount / row.installments;
+        const installmentValue = Number(row.amount) / row.installments;
         return (
           <div className="flex flex-col">
             <span className="text-sm font-medium">{row.installments}x</span>
@@ -218,6 +219,8 @@ export default function TransactionsPage() {
           onClick: () => setCreateDialogOpen(true),
           icon: ShoppingCart,
         }}
+        onRefresh={() => refetch()}
+        isRefreshing={isRefetching}
       />
 
       {/* Search and Filters */}
@@ -242,32 +245,43 @@ export default function TransactionsPage() {
       </div>
 
       {/* Summary */}
-      {!isLoading && transactions.length > 0 && (
+      {isLoading ? (
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-          <div className="p-4 rounded-lg border bg-card">
-            <p className="text-sm text-muted-foreground">Total de Transações</p>
-            <p className="text-2xl font-bold">{transactions.length}</p>
-          </div>
-          <div className="p-4 rounded-lg border bg-card">
-            <p className="text-sm text-muted-foreground">Valor Total</p>
-            <p className="text-2xl font-bold">
-              R${" "}
-              {transactions
-                .reduce((sum, t) => sum + t.amount, 0)
-                .toLocaleString("pt-BR", { minimumFractionDigits: 2 })}
-            </p>
-          </div>
-          <div className="p-4 rounded-lg border bg-card">
-            <p className="text-sm text-muted-foreground">Valor Médio</p>
-            <p className="text-2xl font-bold">
-              R${" "}
-              {(
-                transactions.reduce((sum, t) => sum + t.amount, 0) /
-                transactions.length
-              ).toLocaleString("pt-BR", { minimumFractionDigits: 2 })}
-            </p>
-          </div>
+          {Array.from({ length: 3 }).map((_, i) => (
+            <div key={i} className="p-4 rounded-lg border bg-card space-y-2">
+              <Skeleton className="h-4 w-32" />
+              <Skeleton className="h-8 w-20" />
+            </div>
+          ))}
         </div>
+      ) : (
+        transactions.length > 0 && (
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div className="p-4 rounded-lg border bg-card">
+              <p className="text-sm text-muted-foreground">Total de Transações</p>
+              <p className="text-2xl font-bold">{transactions.length}</p>
+            </div>
+            <div className="p-4 rounded-lg border bg-card">
+              <p className="text-sm text-muted-foreground">Valor Total</p>
+              <p className="text-2xl font-bold">
+                R${" "}
+                {transactions
+                  .reduce((sum, t) => sum + Number(t.amount), 0)
+                  .toLocaleString("pt-BR", { minimumFractionDigits: 2 })}
+              </p>
+            </div>
+            <div className="p-4 rounded-lg border bg-card">
+              <p className="text-sm text-muted-foreground">Valor Médio</p>
+              <p className="text-2xl font-bold">
+                R${" "}
+                {(
+                  transactions.reduce((sum, t) => sum + Number(t.amount), 0) /
+                  transactions.length
+                ).toLocaleString("pt-BR", { minimumFractionDigits: 2 })}
+              </p>
+            </div>
+          </div>
+        )
       )}
 
       {/* Data Table */}
@@ -292,17 +306,13 @@ export default function TransactionsPage() {
         title="Nova Transação"
         description="Registre uma nova compra ou despesa"
         isLoading={createMutation.isPending}
-        onSubmit={() => {
-          const form = document.getElementById("transaction-form") as HTMLFormElement;
-          form?.requestSubmit();
-        }}
+        formId="create-transaction-form"
       >
-        <div id="transaction-form">
-          <TransactionForm
-            onSubmit={handleCreate}
-            isLoading={createMutation.isPending}
-          />
-        </div>
+        <TransactionForm
+          formId="create-transaction-form"
+          onSubmit={handleCreate}
+          isLoading={createMutation.isPending}
+        />
       </FormDialog>
 
       {/* Edit Dialog */}
@@ -313,20 +323,14 @@ export default function TransactionsPage() {
           title="Editar Transação"
           description="Atualize as informações da transação"
           isLoading={updateMutation.isPending}
-          onSubmit={() => {
-            const form = document.getElementById(
-              "edit-transaction-form"
-            ) as HTMLFormElement;
-            form?.requestSubmit();
-          }}
+          formId="edit-transaction-form"
         >
-          <div id="edit-transaction-form">
-            <TransactionForm
-              onSubmit={handleUpdate}
-              defaultValues={selectedTransaction}
-              isLoading={updateMutation.isPending}
-            />
-          </div>
+          <TransactionForm
+            formId="edit-transaction-form"
+            onSubmit={handleUpdate}
+            defaultValues={selectedTransaction}
+            isLoading={updateMutation.isPending}
+          />
         </FormDialog>
       )}
 
