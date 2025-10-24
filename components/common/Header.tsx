@@ -13,9 +13,11 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useAuth } from "@/context/AuthContext";
 import { LogOut, User, Moon, Sun } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 export default function Header() {
   const { session, signOut } = useAuth();
+  const router = useRouter();
   const [theme, setTheme] = useState<"light" | "dark">("dark");
 
   useEffect(() => {
@@ -87,7 +89,7 @@ export default function Header() {
               </div>
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>
+            <DropdownMenuItem onClick={() => router.push("/profile")}>
               <User className="mr-2 h-4 w-4" />
               <span>Perfil</span>
             </DropdownMenuItem>

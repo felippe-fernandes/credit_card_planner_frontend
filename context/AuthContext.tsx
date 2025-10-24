@@ -31,8 +31,23 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   useEffect(() => {
     const { data: authListener } = supabase.auth.onAuthStateChange(
-      (_event, newSession) => {
+      (event, newSession) => {
         queryClient.setQueryData(["session"], newSession);
+
+        // Handle token expiration or sign out events
+        if (event === "SIGNED_OUT" || event === "TOKEN_REFRESHED") {
+          if (!newSession && typeof window !== "undefined") {
+            // Session expired or user was signed out
+            window.location.href = "/login";
+          }
+        }
+
+        // Handle user deletion
+        if (event === "USER_DELETED") {
+          if (typeof window !== "undefined") {
+            window.location.href = "/login";
+          }
+        }
       },
     );
 

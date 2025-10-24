@@ -8,6 +8,37 @@ export const api = axios.create({
 	},
 });
 
+// Flag to prevent multiple redirects
+let isRedirecting = false;
+
+// Response interceptor to handle unauthorized errors
+api.interceptors.response.use(
+	(response) => response,
+	(error) => {
+		// Check if error is 401 Unauthorized
+		if (error.response?.status === 401 && !isRedirecting) {
+			isRedirecting = true;
+
+			// Clear Supabase session from localStorage
+			if (typeof window !== "undefined") {
+				const keys = Object.keys(localStorage);
+				keys.forEach((key) => {
+					if (key.startsWith("sb-") || key === "supabase-session") {
+						localStorage.removeItem(key);
+					}
+				});
+
+				// Store a message to show after redirect
+				sessionStorage.setItem("auth_expired", "true");
+
+				// Redirect to login page
+				window.location.href = "/login";
+			}
+		}
+		return Promise.reject(error);
+	}
+);
+
 interface IHandleAxiosRequest {
 	path: string;
 	method: Method;
@@ -40,9 +71,9 @@ export const handleAxiosRequest = async <T>({
 		if (axios.isAxiosError(error)) {
 			throw new Error(
 				errorMessage ??
-					error.response?.data.message ??
-					error.message ??
-					"An error occurred during the request",
+				error.response?.data.message ??
+				error.message ??
+				"An error occurred during the request",
 			);
 		} else {
 			throw new Error(errorMessage ?? "An unexpected error occurred");
