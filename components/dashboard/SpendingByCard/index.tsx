@@ -2,6 +2,7 @@
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from "recharts";
+import { formatCurrencyWithSymbol, formatCurrency } from "@/lib/formatters";
 
 interface CardData {
   name: string;
@@ -38,7 +39,7 @@ export function SpendingByCard({ data }: SpendingByCardProps) {
           <p className="font-semibold">{data.name}</p>
           <p className="text-sm text-muted-foreground">{data.bank}</p>
           <p className="text-sm font-medium mt-1">
-            R$ {data.value.toLocaleString("pt-BR", { minimumFractionDigits: 2 })}
+            {formatCurrencyWithSymbol(data.value)}
           </p>
         </div>
       );
@@ -65,7 +66,7 @@ export function SpendingByCard({ data }: SpendingByCardProps) {
               className="text-xs"
               tick={{ fill: "hsl(var(--muted-foreground))" }}
               tickFormatter={(value) =>
-                `R$ ${value.toLocaleString("pt-BR", { maximumFractionDigits: 0 })}`
+                `R$ ${formatCurrency(value, { minimumFractionDigits: 0, maximumFractionDigits: 0 })}`
               }
             />
             <Tooltip content={<CustomTooltip />} />

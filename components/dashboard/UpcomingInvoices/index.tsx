@@ -8,6 +8,7 @@ import { ptBR } from "date-fns/locale";
 import { Calendar, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
+import { formatCurrencyWithSymbol } from "@/lib/formatters";
 
 interface UpcomingInvoicesProps {
   invoices: Invoice[];
@@ -95,11 +96,11 @@ export function UpcomingInvoices({ invoices }: UpcomingInvoicesProps) {
                 </div>
                 <div className="text-right">
                   <span className="font-semibold block">
-                    R$ {remainingAmount.toLocaleString("pt-BR", { minimumFractionDigits: 2 })}
+                    {formatCurrencyWithSymbol(remainingAmount)}
                   </span>
                   {invoice.paidAmount > 0 && (
                     <span className="text-xs text-muted-foreground">
-                      de R$ {invoice.totalAmount.toLocaleString("pt-BR", { minimumFractionDigits: 2 })}
+                      de {formatCurrencyWithSymbol(invoice.totalAmount)}
                     </span>
                   )}
                 </div>

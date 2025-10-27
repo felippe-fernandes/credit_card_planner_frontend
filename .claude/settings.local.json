@@ -4,7 +4,8 @@
       "Read(//c/Users/felip/Documents/GitHub/credit_card_planner/**)",
       "Bash(tree:*)",
       "Bash(npx shadcn@latest add:*)",
-      "Bash(npm install:*)"
+      "Bash(npm install:*)",
+      "Bash(npm run dev:*)"
     ],
     "deny": [],
     "ask": []

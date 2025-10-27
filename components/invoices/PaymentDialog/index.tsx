@@ -13,6 +13,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Invoice } from "@/types/entities/invoice";
 import { useState } from "react";
+import { formatCurrency } from "@/lib/formatters";
 import { CheckCircle2 } from "lucide-react";
 
 interface PaymentDialogProps {
@@ -71,19 +72,19 @@ export function PaymentDialog({
             <div className="flex justify-between text-sm">
               <span className="text-muted-foreground">Valor Total:</span>
               <span className="font-medium">
-                R$ {totalAmount.toLocaleString("pt-BR", { minimumFractionDigits: 2 })}
+                R$ {formatCurrency(totalAmount)}
               </span>
             </div>
             <div className="flex justify-between text-sm">
               <span className="text-muted-foreground">Já Pago:</span>
               <span className="font-medium text-green-600">
-                R$ {paidAmountNumber.toLocaleString("pt-BR", { minimumFractionDigits: 2 })}
+                R$ {formatCurrency(paidAmountNumber)}
               </span>
             </div>
             <div className="flex justify-between text-sm border-t pt-2">
               <span className="text-muted-foreground">Restante:</span>
               <span className="font-bold">
-                R$ {remainingAmount.toLocaleString("pt-BR", { minimumFractionDigits: 2 })}
+                R$ {formatCurrency(remainingAmount)}
               </span>
             </div>
           </div>
@@ -99,7 +100,7 @@ export function PaymentDialog({
                 className="h-4 w-4"
               />
               <Label htmlFor="full" className="cursor-pointer">
-                Pagar valor total restante (R$ {remainingAmount.toLocaleString("pt-BR", { minimumFractionDigits: 2 })})
+                Pagar valor total restante (R$ {formatCurrency(remainingAmount)})
               </Label>
             </div>
 

@@ -17,7 +17,7 @@ import {
 import { Category, CreateCategoryDto } from "@/types/entities/category";
 import { Plus, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Skeleton } from "@/components/ui/skeleton";
+import { CategoriesSkeleton } from "@/components/common/Skeletons";
 
 // Default categories that come from backend
 const DEFAULT_CATEGORY_NAMES = ["Food", "Transport", "Entertainment", "Health", "Education"];
@@ -103,6 +103,10 @@ export default function CategoriesPage() {
     setDeleteDialogOpen(true);
   };
 
+  if (isLoading) {
+    return <CategoriesSkeleton />;
+  }
+
   return (
     <div className="flex flex-col gap-6 p-6">
       <PageHeader
@@ -140,13 +144,7 @@ export default function CategoriesPage() {
       </div>
 
       {/* Categories List */}
-      {isLoading ? (
-        <div className="space-y-2">
-          {Array.from({ length: 8 }).map((_, index) => (
-            <Skeleton key={index} className="h-14" />
-          ))}
-        </div>
-      ) : filteredCategories.length === 0 ? (
+      {filteredCategories.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-12 text-center">
           <div className="flex h-20 w-20 items-center justify-center rounded-full bg-muted mb-4">
             <Plus className="h-10 w-10 text-muted-foreground" />

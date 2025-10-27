@@ -18,6 +18,8 @@ import {
 import { Card, CreateCardDto } from "@/types/entities/card";
 import { CreditCard, Pencil, Trash2 } from "lucide-react";
 import { useMemo, useState } from "react";
+import { PageSkeleton } from "@/components/common/Skeletons";
+import { formatCurrency } from "@/lib/formatters";
 
 export default function CardsPage() {
   // State for search and filters
@@ -118,7 +120,7 @@ export default function CardsPage() {
       header: "Limite",
       cell: (row) => (
         <span className="font-medium">
-          R$ {Number(row.limit).toLocaleString("pt-BR", { minimumFractionDigits: 2 })}
+          R$ {formatCurrency(row.limit)}
         </span>
       ),
       sortable: true,
@@ -131,7 +133,7 @@ export default function CardsPage() {
         return (
           <div className="space-y-1">
             <span className="text-sm">
-              R$ {Number(row.availableLimit).toLocaleString("pt-BR", { minimumFractionDigits: 2 })}
+              R$ {formatCurrency(row.availableLimit)}
             </span>
             <div className="h-1.5 w-full bg-secondary rounded-full overflow-hidden">
               <div
@@ -217,6 +219,10 @@ export default function CardsPage() {
       },
     });
   };
+
+  if (isLoading) {
+    return <PageSkeleton tableColumns={7} />;
+  }
 
   return (
     <div className="flex flex-col gap-6 p-6">

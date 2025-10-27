@@ -2,6 +2,7 @@
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from "recharts";
+import { formatCurrencyWithSymbol } from "@/lib/formatters";
 
 interface CategoryData {
   name: string;
@@ -43,7 +44,7 @@ export function SpendingByCategory({ data }: SpendingByCategoryProps) {
           </div>
           <div className="text-sm">
             <p className="font-medium">
-              R$ {data.value.toLocaleString("pt-BR", { minimumFractionDigits: 2 })}
+              {formatCurrencyWithSymbol(data.value)}
             </p>
             <p className="text-muted-foreground">{percentage}% do total</p>
           </div>

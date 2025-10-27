@@ -18,7 +18,8 @@ import {
 import { Transaction, CreateTransactionDto } from "@/types/entities/transaction";
 import { ShoppingCart, Pencil, Trash2 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
-import { Skeleton } from "@/components/ui/skeleton";
+import { PageSkeleton } from "@/components/common/Skeletons";
+import { formatCurrency } from "@/lib/formatters";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 
@@ -128,7 +129,7 @@ export default function TransactionsPage() {
       header: "Valor",
       cell: (row) => (
         <span className="font-medium">
-          R$ {Number(row.amount).toLocaleString("pt-BR", { minimumFractionDigits: 2 })}
+          R$ {formatCurrency(row.amount)}
         </span>
       ),
       sortable: true,
@@ -145,7 +146,7 @@ export default function TransactionsPage() {
           <div className="flex flex-col">
             <span className="text-sm font-medium">{row.installments}x</span>
             <span className="text-xs text-muted-foreground">
-              R$ {installmentValue.toLocaleString("pt-BR", { minimumFractionDigits: 2 })}
+              R$ {formatCurrency(installmentValue)}
             </span>
           </div>
         );
@@ -208,6 +209,10 @@ export default function TransactionsPage() {
       },
     });
   };
+
+  if (isLoading) {
+    return <PageSkeleton tableColumns={8} />;
+  }
 
   return (
     <div className="flex flex-col gap-6 p-6">

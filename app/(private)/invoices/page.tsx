@@ -9,7 +9,8 @@ import { PaymentDialog } from "@/components/invoices/PaymentDialog";
 import { useInvoices, useMarkInvoiceAsPaid } from "@/hooks/useInvoices";
 import { Invoice } from "@/types/entities/invoice";
 import { FileText } from "lucide-react";
-import { Skeleton } from "@/components/ui/skeleton";
+import { InvoicesSkeleton } from "@/components/common/Skeletons";
+import { formatCurrency } from "@/lib/formatters";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 export default function InvoicesPage() {
@@ -75,6 +76,10 @@ export default function InvoicesPage() {
   const paidInvoices = invoices.filter((inv) => inv.status === "PAID");
   const overdueInvoices = invoices.filter((inv) => inv.status === "OVERDUE");
 
+  if (isLoading) {
+    return <InvoicesSkeleton />;
+  }
+
   return (
     <div className="flex flex-col gap-6 p-6">
       <PageHeader
@@ -117,19 +122,17 @@ export default function InvoicesPage() {
             <div className="p-4 rounded-lg border bg-card">
               <p className="text-sm text-muted-foreground">Valor Total</p>
               <p className="text-2xl font-bold">
-                R${" "}
-                {invoices
-                  .reduce((sum, inv) => sum + Number(inv.totalAmount), 0)
-                  .toLocaleString("pt-BR", { minimumFractionDigits: 2 })}
+                R$ {formatCurrency(
+                  invoices.reduce((sum, inv) => sum + Number(inv.totalAmount), 0)
+                )}
               </p>
             </div>
             <div className="p-4 rounded-lg border bg-card">
               <p className="text-sm text-muted-foreground">Valor Pago</p>
               <p className="text-2xl font-bold text-green-600">
-                R${" "}
-                {invoices
-                  .reduce((sum, inv) => sum + Number(inv.paidAmount), 0)
-                  .toLocaleString("pt-BR", { minimumFractionDigits: 2 })}
+                R$ {formatCurrency(
+                  invoices.reduce((sum, inv) => sum + Number(inv.paidAmount), 0)
+                )}
               </p>
             </div>
             <div className="p-4 rounded-lg border bg-card">

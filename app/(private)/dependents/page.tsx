@@ -16,6 +16,7 @@ import {
 import { Dependent, CreateDependentDto } from "@/types/entities/dependent";
 import { Users, Pencil, Trash2 } from "lucide-react";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { PageSkeleton } from "@/components/common/Skeletons";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 
@@ -160,6 +161,10 @@ export default function DependentsPage() {
       },
     });
   };
+
+  if (isLoading) {
+    return <PageSkeleton tableColumns={4} hasFilters={true} />;
+  }
 
   return (
     <div className="flex flex-col gap-6 p-6">

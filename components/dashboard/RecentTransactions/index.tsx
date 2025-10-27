@@ -8,6 +8,7 @@ import { ptBR } from "date-fns/locale";
 import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
+import { formatCurrencyWithSymbol } from "@/lib/formatters";
 
 interface RecentTransactionsProps {
   transactions: Transaction[];
@@ -69,7 +70,7 @@ export function RecentTransactions({ transactions }: RecentTransactionsProps) {
                 </span>
               </div>
               <span className="font-semibold">
-                R$ {transaction.amount.toLocaleString("pt-BR", { minimumFractionDigits: 2 })}
+                {formatCurrencyWithSymbol(transaction.amount)}
               </span>
             </div>
           ))}

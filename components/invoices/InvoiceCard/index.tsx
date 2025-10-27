@@ -8,6 +8,7 @@ import { Calendar, CreditCard, DollarSign, CheckCircle2 } from "lucide-react";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { Progress } from "@/components/ui/progress";
+import { formatCurrency } from "@/lib/formatters";
 
 interface InvoiceCardProps {
   invoice: Invoice;
@@ -74,19 +75,13 @@ export function InvoiceCard({
           <div>
             <p className="text-xs text-muted-foreground">Valor Total</p>
             <p className="text-lg font-bold">
-              R${" "}
-              {totalAmount.toLocaleString("pt-BR", {
-                minimumFractionDigits: 2,
-              })}
+              R$ {formatCurrency(totalAmount)}
             </p>
           </div>
           <div>
             <p className="text-xs text-muted-foreground">Valor Pago</p>
             <p className="text-lg font-bold text-green-600 dark:text-green-500">
-              R${" "}
-              {paidAmount.toLocaleString("pt-BR", {
-                minimumFractionDigits: 2,
-              })}
+              R$ {formatCurrency(paidAmount)}
             </p>
           </div>
         </div>
@@ -101,10 +96,7 @@ export function InvoiceCard({
             <Progress value={paymentProgress} className="h-2" />
             {remainingAmount > 0 && (
               <p className="text-xs text-muted-foreground">
-                Faltam R${" "}
-                {remainingAmount.toLocaleString("pt-BR", {
-                  minimumFractionDigits: 2,
-                })}
+                Faltam R$ {formatCurrency(remainingAmount)}
               </p>
             )}
           </div>

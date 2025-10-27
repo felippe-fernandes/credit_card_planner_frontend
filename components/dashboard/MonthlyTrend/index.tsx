@@ -2,6 +2,7 @@
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
+import { formatCurrencyWithSymbol, formatCurrency } from "@/lib/formatters";
 
 interface TrendData {
   month: string;
@@ -37,7 +38,7 @@ export function MonthlyTrend({ data }: MonthlyTrendProps) {
         <div className="rounded-lg border bg-background p-3 shadow-sm">
           <p className="font-semibold">{data.month}</p>
           <p className="text-sm font-medium mt-1">
-            R$ {data.value.toLocaleString("pt-BR", { minimumFractionDigits: 2 })}
+            {formatCurrencyWithSymbol(data.value)}
           </p>
         </div>
       );
@@ -50,7 +51,7 @@ export function MonthlyTrend({ data }: MonthlyTrendProps) {
       <CardHeader>
         <CardTitle>Evolução de Gastos</CardTitle>
         <CardDescription>
-          Últimos 6 meses • Média: R$ {average.toLocaleString("pt-BR", { minimumFractionDigits: 2 })}
+          Últimos 6 meses • Média: {formatCurrencyWithSymbol(average)}
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -72,7 +73,7 @@ export function MonthlyTrend({ data }: MonthlyTrendProps) {
               className="text-xs"
               tick={{ fill: "hsl(var(--muted-foreground))" }}
               tickFormatter={(value) =>
-                `R$ ${value.toLocaleString("pt-BR", { maximumFractionDigits: 0 })}`
+                `R$ ${formatCurrency(value, { minimumFractionDigits: 0, maximumFractionDigits: 0 })}`
               }
             />
             <Tooltip content={<CustomTooltip />} />
