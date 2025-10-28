@@ -1,5 +1,6 @@
 import { handleAxiosRequest } from "@/lib/axios";
 import { IResponseBase } from "@/types/api";
+import { PaginationParams, PaginatedResponse } from "@/types/api/pagination";
 import { CreateTransactionDto, Transaction, UpdateTransactionDto } from "@/types/entities/transaction";
 
 export class TransactionService {
@@ -19,7 +20,7 @@ export class TransactionService {
     endDate?: string;
     installments?: number;
     installmentDates?: string;
-  }): Promise<IResponseBase<Transaction[]>> {
+  } & PaginationParams): Promise<PaginatedResponse<Transaction[]>> {
     return await handleAxiosRequest({
       path: "/transactions",
       method: "get",

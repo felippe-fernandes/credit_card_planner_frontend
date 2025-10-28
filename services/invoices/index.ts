@@ -1,5 +1,6 @@
 import { handleAxiosRequest } from "@/lib/axios";
 import { IResponseBase } from "@/types/api";
+import { PaginationParams, PaginatedResponse } from "@/types/api/pagination";
 import { Invoice, UpdateInvoiceDto, MarkInvoiceAsPaidDto, InvoiceStatus } from "@/types/entities/invoice";
 
 export class InvoiceService {
@@ -21,7 +22,7 @@ export class InvoiceService {
     month?: number;
     year?: number;
     status?: InvoiceStatus;
-  }): Promise<IResponseBase<Invoice[]>> {
+  } & PaginationParams): Promise<PaginatedResponse<Invoice[]>> {
     return await handleAxiosRequest({
       path: "/invoice",
       method: "get",

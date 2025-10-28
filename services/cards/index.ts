@@ -1,5 +1,6 @@
 import { handleAxiosRequest } from "@/lib/axios";
 import { IResponseBase } from "@/types/api";
+import { PaginationParams, PaginatedResponse } from "@/types/api/pagination";
 import { Card, CreateCardDto, UpdateCardDto } from "@/types/entities/card";
 
 export class CardService {
@@ -15,7 +16,7 @@ export class CardService {
     dueDay?: number;
     payDay?: number;
     name?: string;
-  }): Promise<IResponseBase<Card[]>> {
+  } & PaginationParams): Promise<PaginatedResponse<Card[]>> {
     return await handleAxiosRequest({
       path: "/cards",
       method: "get",

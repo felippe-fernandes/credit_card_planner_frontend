@@ -1,10 +1,11 @@
 import { TransactionService } from "@/services/transactions";
 import { CreateTransactionDto, UpdateTransactionDto } from "@/types/entities/transaction";
+import { PaginationParams } from "@/types/api/pagination";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { useServiceClient } from "./useServiceClient";
 
-interface UseTransactionsFilters {
+interface UseTransactionsFilters extends PaginationParams {
   card?: string;
   dependent?: string;
   purchaseName?: string;
@@ -23,7 +24,7 @@ export function useTransactions(filters?: UseTransactionsFilters) {
     queryKey: ["transactions", filters],
     queryFn: async () => {
       const response = await TransactionClient.getAll(filters);
-      return response.result;
+      return response;
     },
   });
 }

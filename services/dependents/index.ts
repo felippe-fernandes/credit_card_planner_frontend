@@ -1,5 +1,6 @@
 import { handleAxiosRequest } from "@/lib/axios";
 import { IResponseBase } from "@/types/api";
+import { PaginationParams, PaginatedResponse } from "@/types/api/pagination";
 import { Dependent, CreateDependentDto, UpdateDependentDto } from "@/types/entities/dependent";
 
 export class DependentService {
@@ -9,7 +10,7 @@ export class DependentService {
     this.useMock = useMock ?? false;
   }
 
-  public async getAll(params?: { name?: string; id?: string }): Promise<IResponseBase<Dependent[]>> {
+  public async getAll(params?: { name?: string; id?: string } & PaginationParams): Promise<PaginatedResponse<Dependent[]>> {
     return await handleAxiosRequest({
       path: "/dependents",
       method: "get",

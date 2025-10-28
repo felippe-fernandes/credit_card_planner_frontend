@@ -1,10 +1,11 @@
 import { DependentService } from "@/services/dependents";
 import { CreateDependentDto, UpdateDependentDto } from "@/types/entities/dependent";
+import { PaginationParams } from "@/types/api/pagination";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { useServiceClient } from "./useServiceClient";
 
-interface UseDependentsFilters {
+interface UseDependentsFilters extends PaginationParams {
   name?: string;
   id?: string;
 }
@@ -16,7 +17,7 @@ export function useDependents(filters?: UseDependentsFilters) {
     queryKey: ["dependents", filters],
     queryFn: async () => {
       const response = await DependentClient.getAll(filters);
-      return response.result;
+      return response;
     },
   });
 }

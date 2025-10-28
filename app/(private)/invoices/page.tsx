@@ -29,7 +29,9 @@ export default function InvoicesPage() {
   const [selectedInvoice, setSelectedInvoice] = useState<Invoice | null>(null);
 
   // Fetch invoices
-  const { data: invoices = [], isLoading, refetch, isRefetching } = useInvoices(filters);
+  const { data, isLoading, refetch, isRefetching } = useInvoices(filters);
+
+  const invoices = data?.result || [];
 
   // Mutations
   const markAsPaidMutation = useMarkInvoiceAsPaid();

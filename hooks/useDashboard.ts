@@ -11,8 +11,11 @@ export interface DashboardFilters {
 }
 
 export function useDashboardData(filters: DashboardFilters) {
-  const { data: cards = [], isLoading: cardsLoading } = useCards();
-  const { data: categories = [] } = useCategories();
+  const { data: cardsData, isLoading: cardsLoading } = useCards();
+  const { data: categoriesData } = useCategories();
+
+  const cards = cardsData?.result || [];
+  const categories = categoriesData?.result || [];
 
   // Calculate date range based on period
   const { startDate, endDate } = useMemo(() => {
@@ -50,20 +53,24 @@ export function useDashboardData(filters: DashboardFilters) {
   }, [filters.period]);
 
   // Fetch transactions for the period
-  const { data: transactions = [], isLoading: transactionsLoading } = useTransactions({
+  const { data: transactionsData, isLoading: transactionsLoading } = useTransactions({
     startDate,
     endDate,
     card: filters.cardId,
   });
 
+  const transactions = transactionsData?.result || [];
+
   // Fetch invoices for current month
   const currentMonth = new Date().getMonth() + 1;
   const currentYear = new Date().getFullYear();
-  const { data: currentInvoices = [], isLoading: invoicesLoading } = useInvoices({
+  const { data: invoicesData, isLoading: invoicesLoading } = useInvoices({
     month: currentMonth,
     year: currentYear,
     cardId: filters.cardId,
   });
+
+  const currentInvoices = invoicesData?.result || [];
 
   // Calculate KPIs
   const kpis = useMemo(() => {

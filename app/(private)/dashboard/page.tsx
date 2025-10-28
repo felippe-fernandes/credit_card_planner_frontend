@@ -28,7 +28,9 @@ export default function DashboardPage() {
     period: "current_month",
   });
 
-  const { data: cards = [] } = useCards();
+  const { data: cardsData } = useCards();
+  const cards = cardsData?.result || [];
+
   const {
     kpis,
     spendingByCategory,

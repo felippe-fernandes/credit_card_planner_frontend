@@ -4,11 +4,12 @@ import {
   MarkInvoiceAsPaidDto,
   UpdateInvoiceDto,
 } from "@/types/entities/invoice";
+import { PaginationParams } from "@/types/api/pagination";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { useServiceClient } from "./useServiceClient";
 
-interface UseInvoicesFilters {
+interface UseInvoicesFilters extends PaginationParams {
   cardId?: string;
   month?: number;
   year?: number;
@@ -22,7 +23,7 @@ export function useInvoices(filters?: UseInvoicesFilters) {
     queryKey: ["invoices", filters],
     queryFn: async () => {
       const response = await InvoiceClient.getAll(filters);
-      return response.result;
+      return response;
     },
   });
 }

@@ -30,9 +30,11 @@ export default function CategoriesPage() {
   const [selectedCategory, setSelectedCategory] = useState<Category | null>(null);
 
   // Fetch categories
-  const { data: categories = [], isLoading, refetch, isRefetching } = useCategories({
+  const { data, isLoading, refetch, isRefetching } = useCategories({
     name: searchTerm || undefined,
   });
+
+  const categories = data?.result || [];
 
   // Mutations
   const createMutation = useCreateCategory();

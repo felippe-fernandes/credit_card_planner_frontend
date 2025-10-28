@@ -32,9 +32,11 @@ export default function DependentsPage() {
   const [sortDirection, setSortDirection] = useState<"asc" | "desc">("asc");
 
   // Fetch dependents
-  const { data: dependents = [], isLoading, refetch, isRefetching } = useDependents({
+  const { data, isLoading, refetch, isRefetching } = useDependents({
     name: searchTerm || undefined,
   });
+
+  const dependents = data?.result || [];
 
   // Mutations
   const createMutation = useCreateDependent();

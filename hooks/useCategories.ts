@@ -1,10 +1,11 @@
 import { CategoryService } from "@/services/categories";
 import { CreateCategoryDto, UpdateCategoryDto } from "@/types/entities/category";
+import { PaginationParams } from "@/types/api/pagination";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { useServiceClient } from "./useServiceClient";
 
-interface UseCategoriesFilters {
+interface UseCategoriesFilters extends PaginationParams {
   name?: string;
 }
 
@@ -15,7 +16,7 @@ export function useCategories(filters?: UseCategoriesFilters) {
     queryKey: ["categories", filters],
     queryFn: async () => {
       const response = await CategoryClient.getAll(filters);
-      return response.result;
+      return response;
     },
   });
 }

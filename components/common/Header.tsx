@@ -1,6 +1,5 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import {
@@ -12,33 +11,14 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useAuth } from "@/context/AuthContext";
+import { useTheme } from "@/context/ThemeContext";
 import { LogOut, User, Moon, Sun } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 export default function Header() {
   const { session, signOut } = useAuth();
+  const { theme, toggleTheme } = useTheme();
   const router = useRouter();
-  const [theme, setTheme] = useState<"light" | "dark">("dark");
-
-  useEffect(() => {
-    const root = document.documentElement;
-    const isDark = root.classList.contains("dark");
-    setTheme(isDark ? "dark" : "light");
-  }, []);
-
-  const toggleTheme = () => {
-    const root = document.documentElement;
-    const newTheme = theme === "dark" ? "light" : "dark";
-
-    if (newTheme === "dark") {
-      root.classList.add("dark");
-    } else {
-      root.classList.remove("dark");
-    }
-
-    localStorage.setItem("theme", newTheme);
-    setTheme(newTheme);
-  };
 
   const displayName = session?.user?.user_metadata?.displayName || "Usuário";
   const email = session?.user?.email || "";

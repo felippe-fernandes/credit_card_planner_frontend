@@ -1,10 +1,11 @@
 import { CardService } from "@/services/cards";
 import { CreateCardDto, UpdateCardDto } from "@/types/entities/card";
+import { PaginationParams } from "@/types/api/pagination";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { useServiceClient } from "./useServiceClient";
 
-interface UseCardsFilters {
+interface UseCardsFilters extends PaginationParams {
   flag?: string;
   bank?: string;
   dueDay?: number;
@@ -19,7 +20,7 @@ export function useCards(filters?: UseCardsFilters) {
     queryKey: ["cards", filters],
     queryFn: async () => {
       const response = await CardClient.getAll(filters);
-      return response.result;
+      return response;
     },
   });
 }

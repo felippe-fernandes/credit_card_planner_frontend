@@ -1,12 +1,13 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useEffect } from "react";
 import { PageHeader } from "@/components/common/PageHeader";
 import { SearchBar } from "@/components/common/SearchBar";
 import { FilterDrawer } from "@/components/common/FilterDrawer";
 import { DataTable, ColumnDef } from "@/components/common/DataTable";
 import { FormDialog } from "@/components/common/FormDialog";
 import { DeleteDialog } from "@/components/common/DeleteDialog";
+import { Pagination } from "@/components/common/Pagination";
 import { TransactionForm } from "@/components/transactions/TransactionForm";
 import { TransactionFilters } from "@/components/transactions/TransactionFilters";
 import {
@@ -15,9 +16,11 @@ import {
   useUpdateTransaction,
   useDeleteTransaction,
 } from "@/hooks/useTransactions";
+import { usePagination } from "@/hooks/usePagination";
 import { Transaction, CreateTransactionDto } from "@/types/entities/transaction";
 import { ShoppingCart, Pencil, Trash2 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { Skeleton } from "@/components/ui/skeleton";
 import { PageSkeleton } from "@/components/common/Skeletons";
 import { formatCurrency } from "@/lib/formatters";
 import { format } from "date-fns";
@@ -39,14 +42,37 @@ export default function TransactionsPage() {
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [selectedTransaction, setSelectedTransaction] = useState<Transaction | null>(null);
 
-  const [sortColumn, setSortColumn] = useState<string>("");
-  const [sortDirection, setSortDirection] = useState<"asc" | "desc">("asc");
+  // Pagination hook
+  const {
+    params: paginationParams,
+    meta,
+    setMeta,
+    nextPage,
+    previousPage,
+    goToPage,
+    changeLimit,
+    changeSorting,
+  } = usePagination({
+    limit: 10,
+    sortBy: 'purchaseDate',
+    sortOrder: 'desc',
+  });
 
-  // Fetch transactions
-  const { data: transactions = [], isLoading, refetch, isRefetching } = useTransactions({
+  // Fetch transactions with pagination
+  const { data, isLoading, refetch, isRefetching } = useTransactions({
     ...filters,
+    ...paginationParams,
     purchaseName: searchTerm || undefined,
   });
+
+  const transactions = data?.result || [];
+
+  // Update meta when data changes
+  useEffect(() => {
+    if (data?.meta) {
+      setMeta(data.meta);
+    }
+  }, [data?.meta, setMeta]);
 
   // Mutations
   const createMutation = useCreateTransaction();
@@ -66,33 +92,6 @@ export default function TransactionsPage() {
   };
 
   const hasActiveFilters = Object.values(filters).some((value) => value !== undefined);
-
-  // Sorted data
-  const sortedData = useMemo(() => {
-    if (!sortColumn) return transactions;
-
-    const sorted = [...transactions].sort((a, b) => {
-      const aValue = a[sortColumn as keyof Transaction];
-      const bValue = b[sortColumn as keyof Transaction];
-
-      if (aValue === null || aValue === undefined) return 1;
-      if (bValue === null || bValue === undefined) return -1;
-
-      if (typeof aValue === "string" && typeof bValue === "string") {
-        return sortDirection === "asc"
-          ? aValue.localeCompare(bValue)
-          : bValue.localeCompare(aValue);
-      }
-
-      if (typeof aValue === "number" && typeof bValue === "number") {
-        return sortDirection === "asc" ? aValue - bValue : bValue - aValue;
-      }
-
-      return 0;
-    });
-
-    return sorted;
-  }, [transactions, sortColumn, sortDirection]);
 
   // Table columns
   const columns: ColumnDef<Transaction>[] = [
@@ -292,16 +291,24 @@ export default function TransactionsPage() {
       {/* Data Table */}
       <DataTable
         columns={columns}
-        data={sortedData}
+        data={transactions}
         actions={actions}
         isLoading={isLoading}
         emptyMessage="Nenhuma transação encontrada. Crie sua primeira transação!"
         onSort={(column, direction) => {
-          setSortColumn(column);
-          setSortDirection(direction);
+          changeSorting(column, direction);
         }}
-        sortColumn={sortColumn}
-        sortDirection={sortDirection}
+        sortColumn={paginationParams.sortBy}
+        sortDirection={paginationParams.sortOrder}
+      />
+
+      {/* Pagination */}
+      <Pagination
+        meta={meta}
+        onNextPage={nextPage}
+        onPreviousPage={previousPage}
+        onGoToPage={goToPage}
+        onChangeLimit={changeLimit}
       />
 
       {/* Create Dialog */}

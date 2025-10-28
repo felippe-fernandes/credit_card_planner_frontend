@@ -8,6 +8,7 @@ import { FilterDrawer } from "@/components/common/FilterDrawer";
 import { FormDialog } from "@/components/common/FormDialog";
 import { PageHeader } from "@/components/common/PageHeader";
 import { SearchBar } from "@/components/common/SearchBar";
+import { Pagination } from "@/components/common/Pagination";
 import { Badge } from "@/components/ui/badge";
 import {
   useCards,
@@ -15,9 +16,10 @@ import {
   useDeleteCard,
   useUpdateCard,
 } from "@/hooks/useCards";
+import { usePagination } from "@/hooks/usePagination";
 import { Card, CreateCardDto } from "@/types/entities/card";
 import { CreditCard, Pencil, Trash2 } from "lucide-react";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { PageSkeleton } from "@/components/common/Skeletons";
 import { formatCurrency } from "@/lib/formatters";
 
@@ -37,15 +39,37 @@ export default function CardsPage() {
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [selectedCard, setSelectedCard] = useState<Card | null>(null);
 
-  // Sorting state
-  const [sortColumn, setSortColumn] = useState<string>("");
-  const [sortDirection, setSortDirection] = useState<"asc" | "desc">("asc");
+  // Pagination hook
+  const {
+    params: paginationParams,
+    meta,
+    setMeta,
+    nextPage,
+    previousPage,
+    goToPage,
+    changeLimit,
+    changeSorting,
+  } = usePagination({
+    limit: 10,
+    sortBy: 'createdAt',
+    sortOrder: 'desc',
+  });
 
-  // Fetch cards with filters
-  const { data: cards = [], isLoading, refetch, isRefetching } = useCards({
+  // Fetch cards with filters and pagination
+  const { data, isLoading, refetch, isRefetching } = useCards({
     ...filters,
+    ...paginationParams,
     name: searchTerm || undefined,
   });
+
+  const cards = data?.result || [];
+
+  // Update meta when data changes
+  useEffect(() => {
+    if (data?.meta) {
+      setMeta(data.meta);
+    }
+  }, [data?.meta, setMeta]);
 
   // Mutations
   const createMutation = useCreateCard();
@@ -67,33 +91,6 @@ export default function CardsPage() {
 
   // Check if has active filters
   const hasActiveFilters = Object.values(filters).some((value) => value !== undefined);
-
-  // Sorted and filtered data (client-side sorting)
-  const sortedData = useMemo(() => {
-    if (!sortColumn) return cards;
-
-    const sorted = [...cards].sort((a, b) => {
-      const aValue = a[sortColumn as keyof Card];
-      const bValue = b[sortColumn as keyof Card];
-
-      if (aValue === null || aValue === undefined) return 1;
-      if (bValue === null || bValue === undefined) return -1;
-
-      if (typeof aValue === "string" && typeof bValue === "string") {
-        return sortDirection === "asc"
-          ? aValue.localeCompare(bValue)
-          : bValue.localeCompare(aValue);
-      }
-
-      if (typeof aValue === "number" && typeof bValue === "number") {
-        return sortDirection === "asc" ? aValue - bValue : bValue - aValue;
-      }
-
-      return 0;
-    });
-
-    return sorted;
-  }, [cards, sortColumn, sortDirection]);
 
   // Table columns
   const columns: ColumnDef<Card>[] = [
@@ -259,16 +256,24 @@ export default function CardsPage() {
       {/* Data Table */}
       <DataTable
         columns={columns}
-        data={sortedData}
+        data={cards}
         actions={actions}
         isLoading={isLoading}
         emptyMessage="Nenhum cartão encontrado. Crie seu primeiro cartão!"
         onSort={(column, direction) => {
-          setSortColumn(column);
-          setSortDirection(direction);
+          changeSorting(column, direction);
         }}
-        sortColumn={sortColumn}
-        sortDirection={sortDirection}
+        sortColumn={paginationParams.sortBy}
+        sortDirection={paginationParams.sortOrder}
+      />
+
+      {/* Pagination */}
+      <Pagination
+        meta={meta}
+        onNextPage={nextPage}
+        onPreviousPage={previousPage}
+        onGoToPage={goToPage}
+        onChangeLimit={changeLimit}
       />
 
       {/* Create Dialog */}

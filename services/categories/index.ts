@@ -1,5 +1,6 @@
 import { handleAxiosRequest } from "@/lib/axios";
 import { IResponseBase } from "@/types/api";
+import { PaginationParams, PaginatedResponse } from "@/types/api/pagination";
 import { Category, CreateCategoryDto, UpdateCategoryDto } from "@/types/entities/category";
 
 export class CategoryService {
@@ -9,7 +10,7 @@ export class CategoryService {
     this.useMock = useMock ?? false;
   }
 
-  public async getAll(params?: { name?: string }): Promise<IResponseBase<Category[]>> {
+  public async getAll(params?: { name?: string } & PaginationParams): Promise<PaginatedResponse<Category[]>> {
     return await handleAxiosRequest({
       path: "/categories",
       method: "get",
