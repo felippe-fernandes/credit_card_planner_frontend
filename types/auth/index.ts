@@ -1,8 +1,8 @@
-import { loginRequest, signupRequest } from "@/schemas/api/auth.schema";
-import { Session } from "@supabase/supabase-js";
-import { z } from "zod";
-import { IResponseBase } from "../api";
-import { User } from "../entities";
+import type { Session } from "@supabase/supabase-js";
+import type { z } from "zod";
+import type { loginRequest, signupRequest } from "@/schemas/api/auth.schema";
+import type { IResponseBase } from "../api";
+import type { User } from "../entities";
 
 export type LoginRequest = z.infer<typeof loginRequest>;
 
@@ -15,6 +15,6 @@ export type SignupResponse = IResponseBase<User>;
 export type SignoutResponse = IResponseBase<{ userId: User["id"] }>;
 
 export type CheckAuthResponse = IResponseBase<{
-  isAuthenticated: boolean;
-  token: Session["access_token"];
+	isAuthenticated: boolean;
+	token: Session["access_token"];
 }>;

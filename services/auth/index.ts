@@ -1,6 +1,6 @@
 import { handleAxiosRequest } from "@/lib/axios";
 import { supabase } from "@/lib/supabaseClient";
-import {
+import type {
   LoginRequest,
   LoginResponse,
   SignupRequest,
@@ -29,10 +29,13 @@ export class AuthService {
       data: request,
     });
 
-    await supabase.auth.setSession({
-      access_token: response.data.access_token,
-      refresh_token: response.data.refresh_token,
-    });
+    // O backend retorna 'result' em vez de 'data'
+    if (response?.result?.access_token && response?.result?.refresh_token) {
+      await supabase.auth.setSession({
+        access_token: response.result.access_token,
+        refresh_token: response.result.refresh_token,
+      });
+    }
 
     return response;
   }

@@ -1,9 +1,9 @@
-import { HttpStatusCode } from "axios";
+import type { HttpStatusCode } from "axios";
 
 export interface IResponseBase<T> {
-  message: string;
-  statusCode: HttpStatusCode;
-  data: T;
-  count?: number;
-  success: boolean;
+	message: string;
+	statusCode: HttpStatusCode;
+	result: T;
+	count?: number;
+	success: boolean;
 }
