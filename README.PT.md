@@ -13,6 +13,8 @@ Uma aplicação web moderna para rastreamento e gerenciamento de despesas de car
 
 Esta é a aplicação frontend do sistema Credit Card Planner. Ela fornece uma interface intuitiva para os usuários gerenciarem seus cartões de crédito, rastrearem despesas, organizarem transações por categorias, gerenciarem dependentes e monitorarem faturas mensais.
 
+**Nota sobre Arquitetura**: Este projeto segue uma **arquitetura de microsserviços** com repositórios separados para frontend e backend. Não é uma aplicação monolítica - o frontend e backend são projetos independentes que se comunicam via API REST.
+
 ### Principais Funcionalidades
 
 - **Gerenciamento de Cartões de Crédito**: Adicione, edite e rastreie múltiplos cartões de crédito
@@ -56,7 +58,7 @@ Antes de começar, certifique-se de ter instalado:
 - **Git**
 
 Você também precisará:
-- Uma instância em execução do [Credit Card Planner Backend](https://github.com/felippe-fernandes/credit_card_planner_backend)
+- Uma instância em execução do **[Credit Card Planner Backend](https://github.com/felippe-fernandes/credit_card_planner_backend)** (repositório separado)
 - Credenciais do projeto Supabase (URL e Chave Anônima)
 
 ## Começando
@@ -103,6 +105,16 @@ npm run dev
 Abra [http://localhost:3000](http://localhost:3000) no seu navegador.
 
 A aplicação recarregará automaticamente quando você fizer alterações no código.
+
+## Conta de Demonstração
+
+Para recrutadores e avaliadores, uma conta de teste está disponível para explorar a aplicação sem precisar preencher dados:
+
+**Credenciais do Usuário de Teste**:
+- **Email**: `teste@teste.com`
+- **Senha**: `teste123`
+
+> Esta conta vem pré-populada com dados de exemplo (cartões, transações, faturas, categorias) para que você possa ver imediatamente as funcionalidades da aplicação em ação.
 
 ## Scripts Disponíveis
 
@@ -245,8 +257,12 @@ import { Button } from "@/components/ui/button"
 Para instruções detalhadas de desenvolvimento, padrões de arquitetura e melhores práticas, consulte:
 - **[CLAUDE.md](./CLAUDE.md)** - Guia completo para desenvolvedores
 
-Para documentação da API backend:
-- **[Repositório Backend](https://github.com/felippe-fernandes/credit_card_planner_backend)**
+### Projetos Relacionados
+
+Esta aplicação frontend funciona com uma API backend separada:
+- **[Repositório Backend](https://github.com/felippe-fernandes/credit_card_planner_backend)** - API REST NestJS (projeto separado)
+
+> **Importante**: Frontend e backend são intencionalmente repositórios separados seguindo uma arquitetura de microsserviços, não uma estrutura monolítica.
 
 ## Contribuindo
 

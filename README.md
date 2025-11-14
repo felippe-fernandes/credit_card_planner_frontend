@@ -13,6 +13,8 @@ A modern web application for tracking and managing credit card expenses, built w
 
 This is the frontend application for the Credit Card Planner system. It provides an intuitive interface for users to manage their credit cards, track expenses, organize transactions by categories, manage dependents, and monitor monthly invoices.
 
+**Architecture Note**: This project follows a **microservices architecture** with separate frontend and backend repositories. This is not a monolithic application - the frontend and backend are independent projects that communicate via REST API.
+
 ### Key Features
 
 - **Credit Card Management**: Add, edit, and track multiple credit cards
@@ -56,7 +58,7 @@ Before you begin, ensure you have the following installed:
 - **Git**
 
 You'll also need:
-- A running instance of the [Credit Card Planner Backend](https://github.com/felippe-fernandes/credit_card_planner_backend)
+- A running instance of the **[Credit Card Planner Backend](https://github.com/felippe-fernandes/credit_card_planner_backend)** (separate repository)
 - Supabase project credentials (URL and Anonymous Key)
 
 ## Getting Started
@@ -103,6 +105,16 @@ npm run dev
 Open [http://localhost:3000](http://localhost:3000) in your browser.
 
 The application will automatically reload when you make changes to the code.
+
+## Demo Account
+
+For recruiters and evaluators, a test account is available to explore the application without needing to fill in data:
+
+**Test User Credentials**:
+- **Email**: `teste@teste.com`
+- **Password**: `teste123`
+
+> This account comes pre-populated with sample data (cards, transactions, invoices, categories) so you can immediately see the application's features in action.
 
 ## Available Scripts
 
@@ -245,8 +257,12 @@ import { Button } from "@/components/ui/button"
 For detailed development instructions, architecture patterns, and best practices, see:
 - **[CLAUDE.md](./CLAUDE.md)** - Comprehensive developer guide
 
-For backend API documentation:
-- **[Backend Repository](https://github.com/felippe-fernandes/credit_card_planner_backend)**
+### Related Projects
+
+This frontend application works with a separate backend API:
+- **[Backend Repository](https://github.com/felippe-fernandes/credit_card_planner_backend)** - NestJS REST API (separate project)
+
+> **Important**: Frontend and backend are intentionally separate repositories following a microservices architecture, not a monolithic structure.
 
 ## Contributing
 
