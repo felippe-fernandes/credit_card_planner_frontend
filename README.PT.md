@@ -264,16 +264,6 @@ Esta aplicação frontend funciona com uma API backend separada:
 
 > **Importante**: Frontend e backend são intencionalmente repositórios separados seguindo uma arquitetura de microsserviços, não uma estrutura monolítica.
 
-## Contribuindo
-
-Contribuições são bem-vindas! Por favor, siga estes passos:
-
-1. Faça um fork do repositório
-2. Crie uma branch de funcionalidade (`git checkout -b feature/funcionalidade-incrivel`)
-3. Faça commit das suas alterações (`git commit -m 'feat: adiciona funcionalidade incrível'`)
-4. Faça push para a branch (`git push origin feature/funcionalidade-incrivel`)
-5. Abra um Pull Request
-
 ## Licença
 
 Este projeto está licenciado sob a Licença MIT.
