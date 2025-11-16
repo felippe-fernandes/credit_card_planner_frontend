@@ -29,9 +29,12 @@ export function TransactionFilters({
   filters,
   onFilterChange,
 }: TransactionFiltersProps) {
-  const { data: cards = [] } = useCards();
-  const { data: categories = [] } = useCategories();
-  const { data: dependents = [] } = useDependents();
+  const { data } = useCards();
+  const cards = data?.result || [];
+  const { data: categoriesData } = useCategories();
+  const categories = categoriesData?.result || [];
+  const { data: dependentsData } = useDependents();
+  const dependents = dependentsData?.result || [];
 
   return (
     <div className="space-y-4">

@@ -1,15 +1,15 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Input } from "@/components/ui/input";
-import { useState } from "react";
 import { Smile } from "lucide-react";
+import { useState } from "react";
 
 interface EmojiPickerProps {
   value: string;
@@ -35,7 +35,7 @@ export function EmojiPicker({ value, onChange, disabled }: EmojiPickerProps) {
 
   const filteredEmojis = Object.entries(EMOJI_CATEGORIES).reduce(
     (acc, [category, emojis]) => {
-      const filtered = emojis.filter((emoji) => {
+      const filtered = emojis.filter(() => {
         const query = searchTerm.toLowerCase();
         const categoryMatch = category.toLowerCase().includes(query);
         return categoryMatch || !searchTerm;

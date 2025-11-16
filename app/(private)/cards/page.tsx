@@ -7,8 +7,9 @@ import { DeleteDialog } from "@/components/common/DeleteDialog";
 import { FilterDrawer } from "@/components/common/FilterDrawer";
 import { FormDialog } from "@/components/common/FormDialog";
 import { PageHeader } from "@/components/common/PageHeader";
-import { SearchBar } from "@/components/common/SearchBar";
 import { Pagination } from "@/components/common/Pagination";
+import { SearchBar } from "@/components/common/SearchBar";
+import { PageSkeleton } from "@/components/common/Skeletons";
 import { Badge } from "@/components/ui/badge";
 import {
   useCards,
@@ -17,11 +18,10 @@ import {
   useUpdateCard,
 } from "@/hooks/useCards";
 import { usePagination } from "@/hooks/usePagination";
+import { formatCurrency } from "@/lib/formatters";
 import { Card, CreateCardDto } from "@/types/entities/card";
 import { CreditCard, Pencil, Trash2 } from "lucide-react";
-import { useEffect, useMemo, useState } from "react";
-import { PageSkeleton } from "@/components/common/Skeletons";
-import { formatCurrency } from "@/lib/formatters";
+import { useEffect, useState } from "react";
 
 export default function CardsPage() {
   // State for search and filters

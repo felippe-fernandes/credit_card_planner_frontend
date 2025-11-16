@@ -1,8 +1,9 @@
 "use client";
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from "recharts";
-import { formatCurrencyWithSymbol, formatCurrency } from "@/lib/formatters";
+import { formatCurrency, formatCurrencyWithSymbol } from "@/lib/formatters";
+import { Bar, BarChart, CartesianGrid, Cell, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
+import type { TooltipContentProps } from "recharts/types/component/Tooltip";
 
 interface CardData {
   name: string;
@@ -31,7 +32,7 @@ export function SpendingByCard({ data }: SpendingByCardProps) {
     );
   }
 
-  const CustomTooltip = ({ active, payload }: any) => {
+  const CustomTooltip = ({ active, payload }: TooltipContentProps<number, string>) => {
     if (active && payload && payload.length) {
       const data = payload[0].payload;
       return (
@@ -69,7 +70,7 @@ export function SpendingByCard({ data }: SpendingByCardProps) {
                 `R$ ${formatCurrency(value, { minimumFractionDigits: 0, maximumFractionDigits: 0 })}`
               }
             />
-            <Tooltip content={<CustomTooltip />} />
+            <Tooltip content={CustomTooltip} />
             <Bar dataKey="value" radius={[8, 8, 0, 0]}>
               {data.map((entry, index) => (
                 <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />

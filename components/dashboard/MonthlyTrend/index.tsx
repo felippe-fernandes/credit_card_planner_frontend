@@ -1,8 +1,9 @@
 "use client";
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
-import { formatCurrencyWithSymbol, formatCurrency } from "@/lib/formatters";
+import { formatCurrency, formatCurrencyWithSymbol } from "@/lib/formatters";
+import { Area, AreaChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
+import type { TooltipContentProps } from "recharts/types/component/Tooltip";
 
 interface TrendData {
   month: string;
@@ -28,10 +29,9 @@ export function MonthlyTrend({ data }: MonthlyTrendProps) {
     );
   }
 
-  const maxValue = Math.max(...data.map((d) => d.value));
   const average = data.reduce((sum, d) => sum + d.value, 0) / data.length;
 
-  const CustomTooltip = ({ active, payload }: any) => {
+  const CustomTooltip = ({ active, payload }: TooltipContentProps<string | number, string>) => {
     if (active && payload && payload.length) {
       const data = payload[0].payload;
       return (
@@ -76,7 +76,7 @@ export function MonthlyTrend({ data }: MonthlyTrendProps) {
                 `R$ ${formatCurrency(value, { minimumFractionDigits: 0, maximumFractionDigits: 0 })}`
               }
             />
-            <Tooltip content={<CustomTooltip />} />
+            <Tooltip content={CustomTooltip} />
             <Area
               type="monotone"
               dataKey="value"

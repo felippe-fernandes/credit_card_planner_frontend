@@ -1,13 +1,6 @@
 "use client";
 
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
+import { TableSkeleton } from "@/components/common/Skeletons";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -17,9 +10,16 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { ArrowUpDown, MoreHorizontal, Pencil, Trash2 } from "lucide-react";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { ArrowUpDown, MoreHorizontal } from "lucide-react";
 import { ReactNode } from "react";
-import { TableSkeleton } from "@/components/common/Skeletons";
 
 export interface ColumnDef<T> {
   id: string;
@@ -47,6 +47,7 @@ interface DataTableProps<T> {
   sortDirection?: "asc" | "desc";
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function DataTable<T extends Record<string, any>>({
   columns,
   data,
