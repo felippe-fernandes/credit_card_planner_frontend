@@ -54,9 +54,12 @@ export function TransactionForm({
   });
 
   // Fetch options for dropdowns
-  const { data: cards = [], isLoading: cardsLoading } = useCards();
-  const { data: categories = [], isLoading: categoriesLoading } = useCategories();
-  const { data: dependents = [], isLoading: dependentsLoading } = useDependents();
+  const { data: cardsData, isLoading: cardsLoading } = useCards();
+  const cards = cardsData?.result || [];
+  const { data: categoriesData, isLoading: categoriesLoading } = useCategories();
+  const categories = categoriesData?.result || [];
+  const { data: dependentsData, isLoading: dependentsLoading } = useDependents();
+  const dependents = dependentsData?.result || [];
 
   const selectedCardId = watch("cardId");
   const selectedCategoryName = watch("purchaseCategory");
@@ -182,7 +185,7 @@ export function TransactionForm({
       </div>
 
       {/* Installment Preview */}
-      {installments > 1 && amount > 0 && (
+      {installments > 1 && Number(amount) > 0 && (
         <div className="rounded-md border p-3 bg-muted/20">
           <p className="text-sm text-muted-foreground">
             {installments}x de R$ {installmentValue}

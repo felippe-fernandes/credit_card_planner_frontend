@@ -1,27 +1,28 @@
 "use client";
 
-import { useState } from "react";
 import { PageHeader } from "@/components/common/PageHeader";
-import { StatCard } from "@/components/dashboard/StatCard";
-import { SpendingByCategory } from "@/components/dashboard/SpendingByCategory";
-import { SpendingByCard } from "@/components/dashboard/SpendingByCard";
-import { MonthlyTrend } from "@/components/dashboard/MonthlyTrend";
-import { RecentTransactions } from "@/components/dashboard/RecentTransactions";
-import { UpcomingInvoices } from "@/components/dashboard/UpcomingInvoices";
-import { QuickFilter } from "@/components/dashboard/QuickFilter";
-import { useDashboardData, DashboardFilters } from "@/hooks/useDashboard";
-import { useCards } from "@/hooks/useCards";
-import {
-  CreditCard,
-  Wallet,
-  FileText,
-  DollarSign,
-  TrendingUp,
-  AlertCircle,
-} from "lucide-react";
-import { Progress } from "@/components/ui/progress";
 import { DashboardSkeleton } from "@/components/common/Skeletons";
-import { formatCurrencyWithSymbol, formatCurrency } from "@/lib/formatters";
+import { MonthlyTrend } from "@/components/dashboard/MonthlyTrend";
+import { QuickFilter } from "@/components/dashboard/QuickFilter";
+import { RecentTransactions } from "@/components/dashboard/RecentTransactions";
+import { SpendingByCard } from "@/components/dashboard/SpendingByCard";
+import { SpendingByCategory } from "@/components/dashboard/SpendingByCategory";
+import { StatCard } from "@/components/dashboard/StatCard";
+import { TopExpenses } from "@/components/dashboard/TopExpenses";
+import { UpcomingInvoices } from "@/components/dashboard/UpcomingInvoices";
+import { Progress } from "@/components/ui/progress";
+import { useCards } from "@/hooks/useCards";
+import { DashboardFilters, useDashboardData } from "@/hooks/useDashboard";
+import { formatCurrencyWithSymbol } from "@/lib/formatters";
+import {
+  AlertCircle,
+  CreditCard,
+  DollarSign,
+  FileText,
+  TrendingUp,
+  Wallet,
+} from "lucide-react";
+import { useState } from "react";
 
 export default function DashboardPage() {
   const [filters, setFilters] = useState<DashboardFilters>({
@@ -37,6 +38,7 @@ export default function DashboardPage() {
     spendingByCard,
     monthlyTrend,
     recentTransactions,
+    topExpenses,
     upcomingInvoices,
     isLoading,
   } = useDashboardData(filters);
@@ -137,6 +139,11 @@ export default function DashboardPage() {
         <RecentTransactions transactions={recentTransactions} />
         <UpcomingInvoices invoices={upcomingInvoices} />
       </div>
+
+      {/* Top Expenses Section */}
+      {topExpenses.length > 0 && (
+        <TopExpenses transactions={topExpenses} />
+      )}
 
       {/* Top Expenses (if any) */}
       {kpis.transactionCount === 0 && (

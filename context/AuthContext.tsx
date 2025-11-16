@@ -1,7 +1,7 @@
+import { supabase } from "@/lib/supabaseClient";
 import type { Session } from "@supabase/supabase-js";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { createContext, useContext, useEffect, useState } from "react";
-import { supabase } from "@/lib/supabaseClient";
+import { createContext, useContext, useEffect } from "react";
 
 type AuthContextType = {
   session: Session | null;
@@ -42,12 +42,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
           }
         }
 
-        // Handle user deletion
-        if (event === "USER_DELETED") {
-          if (typeof window !== "undefined") {
-            window.location.href = "/login";
-          }
-        }
+
       },
     );
 
@@ -68,7 +63,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ session, token, isLoading, signOut }}>
+    <AuthContext.Provider value={{ session: session ?? null, token, isLoading, signOut }}>
       {children}
     </AuthContext.Provider>
   );

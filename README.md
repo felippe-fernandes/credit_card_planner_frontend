@@ -1,87 +1,119 @@
 # Credit Card Planner - Frontend
 
-A modern web application for tracking and managing credit card expenses, built with Next.js 15 and React 19.
+A modern, full-featured expense tracking application designed to help you manage your credit card expenses, invoices, and transactions with ease. This is the frontend application built with Next.js 15 and React 19.
 
-[![Next.js](https://img.shields.io/badge/Next.js-15-black?style=flat-square&logo=next.js)](https://nextjs.org/)
-[![React](https://img.shields.io/badge/React-19-61dafb?style=flat-square&logo=react)](https://reactjs.org/)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5-blue?style=flat-square&logo=typescript)](https://www.typescriptlang.org/)
-[![TailwindCSS](https://img.shields.io/badge/Tailwind-4-38bdf8?style=flat-square&logo=tailwind-css)](https://tailwindcss.com/)
+## 🔗 Backend Repository
 
-> **Read this in other languages**: [Português (Brasil)](./README.PT.md)
+This frontend application requires the backend API to function. You can find the backend repository at:
+**[credit_card_planner_backend](https://github.com/felippe-fernandes/credit_card_planner_backend)**
 
-## Overview
+## 🧪 Test Credentials
 
-This is the frontend application for the Credit Card Planner system. It provides an intuitive interface for users to manage their credit cards, track expenses, organize transactions by categories, manage dependents, and monitor monthly invoices.
+For recruiters and evaluators who want to explore the application with pre-filled data:
 
-**Architecture Note**: This project follows a **microservices architecture** with separate frontend and backend repositories. This is not a monolithic application - the frontend and backend are independent projects that communicate via REST API.
+- **Email:** `teste@teste.com`
+- **Password:** `123456`
 
-### Key Features
+This test account contains sample data including credit cards, transactions, invoices, and categories to demonstrate the full functionality of the application.
 
-- **Credit Card Management**: Add, edit, and track multiple credit cards
-- **Transaction Tracking**: Record and categorize expenses with detailed information
-- **Invoice Management**: View and organize monthly credit card invoices
-- **Category Organization**: Categorize expenses for better financial insights
-- **Dependent Management**: Track expenses made by dependents
-- **Authentication**: Secure user authentication with Supabase
-- **Dark Mode**: Built-in theme support for light and dark modes
-- **Responsive Design**: Optimized for desktop and mobile devices
+## ✨ Features
 
-## Tech Stack
+- **🔐 Secure Authentication**: Login and signup with JWT-based authentication via Supabase
+- **💳 Credit Card Management**: Add, edit, and manage multiple credit cards
+- **📊 Transaction Tracking**: Record and categorize all your credit card transactions
+- **🧾 Invoice Management**: Track monthly invoices for each credit card
+- **📂 Category Organization**: Organize transactions by custom categories
+- **👥 Dependent Support**: Manage expenses for family members or dependents
+- **📱 Responsive Design**: Fully responsive interface that works on desktop, tablet, and mobile
+- **🌓 Dark Mode**: Built-in dark mode support for comfortable viewing
+- **📈 Dashboard Analytics**: Visualize your spending patterns and track expenses with charts
+- **🔄 Real-time Updates**: Instant synchronization with the backend API
+- **📅 Date Handling**: Advanced date filtering and formatting with date-fns
+- **♿ Accessibility**: Built with Radix UI for superior accessibility
+
+## 🛠️ Tech Stack
 
 ### Core Framework
-- **[Next.js 15](https://nextjs.org/)** - React framework with App Router
-- **[React 19](https://reactjs.org/)** - UI library
-- **[TypeScript](https://www.typescriptlang.org/)** - Type safety
+- **[Next.js 15](https://nextjs.org/)** - React framework with App Router and Turbopack
+- **[React 19](https://react.dev/)** - Latest version of React UI library
+- **[TypeScript](https://www.typescriptlang.org/)** - Type-safe development
 
 ### State Management & Data Fetching
-- **[TanStack Query](https://tanstack.com/query)** (React Query) - Server state management
-- **[Zustand](https://zustand-demo.pmnd.rs/)** - Client state management
-- **[React Hook Form](https://react-hook-form.com/)** - Form state management
-- **[Zod](https://zod.dev/)** - Schema validation
+- **[TanStack Query v5](https://tanstack.com/query)** - Powerful server state management
+- **[Zustand](https://github.com/pmndrs/zustand)** - Lightweight local state management
+- **[Axios](https://axios-http.com/)** - Promise-based HTTP client
 
-### Styling & UI
+### Authentication
+- **[Supabase Auth](https://supabase.com/docs/guides/auth)** - Robust authentication provider with JWT
+
+### Forms & Validation
+- **[React Hook Form](https://react-hook-form.com/)** - Performant form management
+- **[@hookform/resolvers](https://github.com/react-hook-form/resolvers)** - Form validation resolvers
+- **[Zod](https://zod.dev/)** - TypeScript-first schema validation
+
+### UI Components & Styling
 - **[Tailwind CSS 4](https://tailwindcss.com/)** - Utility-first CSS framework
-- **[shadcn/ui](https://ui.shadcn.com/)** - Re-usable component library
-- **[Geist Font](https://vercel.com/font)** - Modern font family
+- **[shadcn/ui](https://ui.shadcn.com/)** - High-quality re-usable components
+- **[Radix UI](https://www.radix-ui.com/)** - Unstyled, accessible component primitives:
+  - Avatar, Dialog, Dropdown Menu, Label, Popover
+  - Progress, Scroll Area, Select, Separator, Slot, Tabs
+- **[Lucide React](https://lucide.dev/)** - Beautiful, consistent icon library
+- **[React Icons](https://react-icons.github.io/react-icons/)** - Additional icon sets
+- **[class-variance-authority](https://cva.style/)** - CVA for component variants
+- **[clsx](https://github.com/lukeed/clsx) + [tailwind-merge](https://github.com/dcastil/tailwind-merge)** - Conditional className utilities
+- **[tailwindcss-animate](https://github.com/jamiebuilds/tailwindcss-animate)** - Animation utilities
 
-### Authentication & Backend
-- **[Supabase](https://supabase.com/)** - Authentication and session management
-- **[Axios](https://axios-http.com/)** - HTTP client for API communication
-- **NestJS Backend** - RESTful API integration
+### Data Visualization
+- **[Recharts](https://recharts.org/)** - Composable charting library for React
 
-## Prerequisites
+### UI Utilities
+- **[Sonner](https://sonner.emilkowal.ski/)** - Elegant toast notifications
+- **[cmdk](https://cmdk.paco.me/)** - Command menu component
+- **[react-day-picker](https://react-day-picker.js.org/)** - Date picker component
+- **[date-fns](https://date-fns.org/)** - Modern date utility library
+
+### Development Tools
+- **[Turbopack](https://turbo.build/pack)** - Next.js 15's fast bundler
+- **[ESLint](https://eslint.org/)** - Code linting and quality
+- **[PostCSS](https://postcss.org/)** - CSS transformation
+- **[Geist Font](https://vercel.com/font)** - Modern, optimized font family
+
+## 📋 Prerequisites
 
 Before you begin, ensure you have the following installed:
 
-- **Node.js** 18.x or higher
-- **npm** 9.x or higher
-- **Git**
+- **Node.js** 20.x or higher
+- **npm**, **yarn**, **pnpm**, or **bun**
+- The **backend API** running (see [backend repository](https://github.com/felippe-fernandes/credit_card_planner_backend))
+- A **Supabase account** (free tier works fine)
 
-You'll also need:
-- A running instance of the **[Credit Card Planner Backend](https://github.com/felippe-fernandes/credit_card_planner_backend)** (separate repository)
-- Supabase project credentials (URL and Anonymous Key)
+## 🚀 Getting Started
 
-## Getting Started
-
-### 1. Clone the Repository
+### 1. Clone the repository
 
 ```bash
 git clone https://github.com/felippe-fernandes/credit_card_planner_frontend.git
 cd credit_card_planner_frontend
 ```
 
-### 2. Install Dependencies
+### 2. Install dependencies
 
 ```bash
 npm install
+# or
+yarn install
+# or
+pnpm install
+# or
+bun install
 ```
 
-### 3. Environment Setup
+### 3. Configure environment variables
 
-Create a `.env.local` file in the root directory:
+Create a `.env.local` file in the root directory with the following variables:
 
 ```env
-# Backend API Configuration
+# Backend API URL (make sure your backend is running)
 NEXT_PUBLIC_API_BASE_URL=http://localhost:3001
 
 # Supabase Configuration
@@ -89,191 +121,410 @@ NEXT_PUBLIC_SUPABASE_URL=your_supabase_project_url
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
 ```
 
-**Required Environment Variables**:
-- `NEXT_PUBLIC_API_BASE_URL` - URL of the NestJS backend API
-- `NEXT_PUBLIC_SUPABASE_URL` - Your Supabase project URL
-- `NEXT_PUBLIC_SUPABASE_ANON_KEY` - Your Supabase anonymous (public) key
+**Note:**
+- You'll need to create a Supabase project at [supabase.com](https://supabase.com)
+- Get your credentials from your Supabase project settings
+- The backend should be configured with the same Supabase project
+- Environment variables are validated at runtime using Zod schemas
 
-> **Note**: The application will fail to start if these variables are missing or invalid (validated via Zod).
-
-### 4. Run Development Server
+### 4. Run the development server
 
 ```bash
 npm run dev
+# or
+yarn dev
+# or
+pnpm dev
+# or
+bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) in your browser.
+Open [http://localhost:3000](http://localhost:3000) in your browser to see the application.
 
-The application will automatically reload when you make changes to the code.
-
-## Demo Account
-
-For recruiters and evaluators, a test account is available to explore the application without needing to fill in data:
-
-**Test User Credentials**:
-- **Email**: `teste@teste.com`
-- **Password**: `teste123`
-
-> This account comes pre-populated with sample data (cards, transactions, invoices, categories) so you can immediately see the application's features in action.
-
-## Available Scripts
+## 📦 Available Scripts
 
 ```bash
-npm run dev          # Start development server with Turbopack (http://localhost:3000)
-npm run build        # Build for production
+# Development
+npm run dev          # Start development server with Turbopack (fast HMR)
+
+# Production
+npm run build        # Build optimized production bundle
 npm run start        # Start production server
-npm run lint         # Run ESLint for code quality checks
+
+# Code Quality
+npm run lint         # Run Next.js ESLint checks
 ```
 
-## Project Structure
+## 🏗️ Project Structure
 
 ```
 credit_card_planner_frontend/
-├── app/                      # Next.js App Router pages
-│   ├── (private)/            # Protected routes (requires authentication)
-│   │   ├── dashboard/        # Dashboard page
-│   │   ├── cards/            # Credit card management pages
-│   │   ├── transactions/     # Transaction pages
-│   │   ├── invoices/         # Invoice pages
-│   │   ├── categories/       # Category management pages
-│   │   ├── dependents/       # Dependent management pages
-│   │   └── layout.tsx        # Protected routes layout (Header + Sidebar)
-│   ├── login/                # Login page
-│   ├── signup/               # Signup page
-│   └── layout.tsx            # Root layout
-├── components/               # React components
-│   ├── common/               # Shared components (Header, Sidebar, etc.)
-│   ├── ui/                   # shadcn/ui primitives
-│   └── [feature]/            # Feature-specific components
-├── context/                  # React Context providers
-│   ├── AuthContext.tsx       # Authentication state
-│   └── ThemeContext.tsx      # Theme state (light/dark)
-├── hooks/                    # Custom React hooks
-├── lib/                      # Shared utilities
-│   ├── axios.ts              # Axios configuration
-│   ├── supabaseClient.ts     # Supabase client
-│   ├── env.ts                # Environment validation
-│   └── utils.ts              # Utility functions
-├── schemas/                  # Zod validation schemas
-│   ├── api/                  # API request schemas
-│   └── entities/             # Entity schemas
-├── services/                 # API service classes
-│   ├── auth/                 # Authentication service
-│   ├── cards/                # Card service
-│   ├── transactions/         # Transaction service
-│   ├── invoices/             # Invoice service
-│   ├── categories/           # Category service
-│   └── dependents/           # Dependent service
-├── types/                    # TypeScript type definitions
-│   ├── api/                  # API response types
-│   ├── auth/                 # Auth types
-│   └── entities/             # Domain model types
-└── utils/                    # App-specific utilities
+├── app/                      # Next.js 15 App Router
+│   ├── (private)/           # Protected routes (requires authentication)
+│   │   ├── layout.tsx       # Protected layout with Header + Sidebar
+│   │   ├── page.tsx         # Dashboard redirect
+│   │   ├── dashboard/       # Dashboard with analytics
+│   │   ├── cards/           # Credit card management
+│   │   ├── transactions/    # Transaction CRUD operations
+│   │   ├── invoices/        # Invoice management
+│   │   ├── categories/      # Category management
+│   │   └── dependents/      # Dependent management
+│   ├── login/               # Public login page
+│   ├── signup/              # Public signup page
+│   ├── layout.tsx           # Root layout with providers
+│   └── globals.css          # Global styles
+│
+├── components/              # React components
+│   ├── common/             # Shared components (Button, Input, Header, etc.)
+│   ├── ui/                 # shadcn/ui components (auto-generated)
+│   ├── login/              # Login form component
+│   ├── signup/             # Signup form component
+│   ├── cards/              # Card-specific components
+│   ├── transactions/       # Transaction components
+│   ├── invoices/           # Invoice components
+│   ├── categories/         # Category components
+│   └── dependents/         # Dependent components
+│
+├── context/                # React Context providers
+│   ├── AuthContext.tsx     # Authentication state management
+│   └── ThemeContext.tsx    # Theme (light/dark mode) management
+│
+├── hooks/                  # Custom React hooks
+│   ├── useServiceClient/   # Service instantiation hook
+│   └── [other hooks]/      # Feature-specific hooks
+│
+├── lib/                    # Core utilities and configurations
+│   ├── axios.ts           # Axios instance with interceptors
+│   ├── env.ts             # Environment variable validation (Zod)
+│   ├── supabaseClient.ts  # Supabase client initialization
+│   └── utils.ts           # Utility functions (cn, etc.)
+│
+├── schemas/               # Zod validation schemas
+│   ├── api/              # API request/response schemas
+│   └── entities/         # Domain entity schemas
+│
+├── services/             # API service layer (class-based)
+│   ├── auth/            # Authentication service
+│   ├── cards/           # Credit card service
+│   ├── transactions/    # Transaction service
+│   ├── invoices/        # Invoice service
+│   ├── categories/      # Category service
+│   └── dependents/      # Dependent service
+│
+├── types/               # TypeScript type definitions
+│   ├── api/            # API types (IResponseBase, etc.)
+│   ├── auth/           # Auth types (LoginRequest, SignupRequest)
+│   └── entities/       # Entity types (Card, Transaction, Invoice)
+│
+├── utils/              # App-specific utilities
+│   └── Wrapper.tsx     # Provider wrapper component
+│
+├── styles/             # Global styles
+│
+├── public/             # Static assets (images, icons, etc.)
+│
+├── components.json     # shadcn/ui configuration
+├── tailwind.config.ts  # Tailwind CSS configuration
+├── tsconfig.json       # TypeScript configuration
+└── next.config.ts      # Next.js configuration
 ```
 
-## Architecture Highlights
+## 🏛️ Architecture Overview
 
 ### Authentication Flow
 
-The application uses a hybrid authentication approach:
+1. User submits login/signup form
+2. Frontend calls backend API (`/auth/login` or `/auth/signup`)
+3. Backend validates credentials and returns Supabase tokens (access_token, refresh_token)
+4. Frontend establishes Supabase session via `supabase.auth.setSession()`
+5. `AuthContext` manages auth state using TanStack Query
+6. Supabase `onAuthStateChange` listener keeps session synchronized
+7. Protected routes automatically redirect unauthenticated users to `/login`
 
-1. User submits credentials via login/signup form
-2. Backend validates credentials and returns Supabase tokens
-3. Frontend sets session using `supabase.auth.setSession()`
-4. `AuthContext` manages auth state with TanStack Query
-5. Protected routes automatically redirect unauthenticated users
+### API Integration Pattern
 
-All pages under `app/(private)/` are automatically protected.
+All API calls follow a consistent, type-safe pattern:
 
-### Service Pattern
+1. **Service Layer**: Class-based services in `services/` directory
+2. **Type Safety**: Request/response types defined with Zod schemas, then inferred
+3. **Error Handling**: Centralized via `handleAxiosRequest` helper in `lib/axios.ts`
+4. **State Management**: TanStack Query for server state caching and synchronization
+5. **Service Instantiation**: Always via `useServiceClient` hook (supports mock mode)
 
-Services are class-based and support optional mock mode:
+**Example API call:**
 
 ```typescript
-// Always use the useServiceClient hook
-const CardService = useServiceClient({ service: CardsService });
+// Service (services/cards/index.ts)
+export class CardService {
+  public async getCards(): Promise<IResponseBase<Card[]>> {
+    return await handleAxiosRequest({
+      path: "/cards",
+      method: "get",
+    });
+  }
+}
 
-// Use in TanStack Query
-const { data } = useQuery({
-  queryKey: ['cards'],
-  queryFn: async () => await CardService.getCards(),
+// Component usage
+const CardClient = useServiceClient({ service: CardService });
+const { data, isLoading } = useQuery({
+  queryKey: ["cards"],
+  queryFn: async () => await CardClient.getCards(),
 });
 ```
 
-**Mock Mode**: Add `?useMock=true` to the URL to enable mock data without backend connection.
+### State Management Strategy
 
-### Form Validation
+- **Server State**: TanStack Query v5 for API data (automatic caching, refetching, and synchronization)
+- **Auth State**: React Context (`AuthContext`) with TanStack Query integration
+- **Form State**: React Hook Form with Zod validation for type-safe forms
+- **Local State**: Zustand for cross-component state when Context is too heavy
+- **UI State**: React `useState`/`useReducer` for component-specific state
 
-Forms use React Hook Form with Zod validation:
+### Route Protection
 
-```typescript
-const { register, handleSubmit, formState: { errors } } = useForm({
-  resolver: zodResolver(cardSchema),
-});
-```
+All authenticated routes are placed under `app/(private)/`. The layout (`app/(private)/layout.tsx`) automatically:
 
-### API Integration
+- Shows loading skeleton during authentication check
+- Redirects to `/login` if user is not authenticated
+- Renders Header and Sidebar for authenticated users
+- Provides access to auth context via `useAuth()` hook
 
-All API calls use centralized error handling via `handleAxiosRequest` helper:
+**No manual auth checks needed** - just place your page under `(private)/`!
 
-```typescript
-return await handleAxiosRequest({
-  path: '/cards',
-  method: 'get',
-});
-```
+### Provider Hierarchy
 
-## Development Guidelines
+Providers are wrapped in `utils/Wrapper.tsx` in the following order (matters for dependency):
 
-### Adding a New Feature
+1. **Suspense** - Loading fallback (`LoadingPage` component)
+2. **ThemeProvider** - Light/dark mode state
+3. **QueryClientProvider** - TanStack Query setup
+4. **AuthProvider** - Authentication state + Supabase session
+5. **Toaster** - Toast notifications (Sonner)
 
-1. Create service in `services/[feature]/index.ts`
-2. Define types in `types/entities/[feature].ts`
-3. Create Zod schemas in `schemas/api/[feature].schema.ts`
-4. Build UI components in `components/[feature]/`
-5. Create pages under `app/(private)/[feature]/`
+## 🎨 Styling System
+
+The application uses Tailwind CSS 4 with a custom configuration and shadcn/ui components for a consistent, modern design system.
+
+### Key Features
+
+- **Utility-first approach**: Compose styles directly in JSX
+- **Custom theme**: Defined in `tailwind.config.ts`
+- **Dark mode**: Automatic via `ThemeProvider` with `dark:` prefix
+- **Responsive**: Mobile-first with `sm:`, `md:`, `lg:`, `xl:` breakpoints
+- **Animations**: Built-in with `tailwindcss-animate`
+- **Typography**: Geist Sans and Geist Mono fonts
 
 ### Adding shadcn/ui Components
+
+To add new components from shadcn/ui:
 
 ```bash
 npx shadcn add <component-name>
 ```
 
-Components are added to `components/ui/` and can be imported:
-
-```typescript
-import { Button } from "@/components/ui/button"
+Examples:
+```bash
+npx shadcn add button
+npx shadcn add dialog
+npx shadcn add form
 ```
 
-### Styling Guidelines
+Components are automatically added to `components/ui/` and can be customized.
 
-- Use Tailwind utility classes directly in JSX
-- Use `cn()` helper for conditional classes
-- Follow responsive design patterns (`md:`, `lg:` prefixes)
-- Dark mode is automatically handled via `ThemeProvider`
+## 🔌 API Integration
 
-## Documentation
+This frontend communicates with the NestJS backend API. The base URL is configured via the `NEXT_PUBLIC_API_BASE_URL` environment variable.
 
-For detailed development instructions, architecture patterns, and best practices, see:
-- **[CLAUDE.md](./CLAUDE.md)** - Comprehensive developer guide
+### Expected Response Format
 
-### Related Projects
+All API endpoints return responses in the following format:
 
-This frontend application works with a separate backend API:
-- **[Backend Repository](https://github.com/felippe-fernandes/credit_card_planner_backend)** - NestJS REST API (separate project)
+```typescript
+interface IResponseBase<T> {
+  message: string;
+  statusCode: number;
+  data: T;           // or result: T (varies by endpoint)
+  count?: number;    // for paginated responses
+  success: boolean;
+}
+```
 
-> **Important**: Frontend and backend are intentionally separate repositories following a microservices architecture, not a monolithic structure.
+### Available Services
 
-## License
+- **AuthService** - Login, signup, session management
+- **CardService** - CRUD operations for credit cards
+- **TransactionService** - Transaction management
+- **InvoiceService** - Invoice operations
+- **CategoryService** - Category management
+- **DependentService** - Dependent user management
 
-This project is licensed under the MIT License.
+## 🧪 Mock Mode
 
-## Support
+The application supports a **mock mode** for testing without the backend. Append `?useMock=true` to any URL to enable mock responses from services.
 
-For issues, questions, or suggestions:
-- Open an issue on GitHub
-- Contact the maintainer
+**Example:**
+```
+http://localhost:3000/dashboard?useMock=true
+```
+
+This is useful for:
+- Frontend development without backend dependency
+- UI/UX testing
+- Demos and presentations
+
+## 🔒 Environment Variables
+
+All environment variables are validated at runtime using Zod schemas (`lib/env.ts`). The app will fail to start if required variables are missing or invalid.
+
+**Required variables:**
+
+```env
+NEXT_PUBLIC_API_BASE_URL      # Backend API URL (must be valid URL)
+NEXT_PUBLIC_SUPABASE_URL      # Supabase project URL (must be valid URL)
+NEXT_PUBLIC_SUPABASE_ANON_KEY # Supabase anonymous key (JWT)
+```
+
+## 🚢 Deployment
+
+### Vercel (Recommended)
+
+The easiest way to deploy is using the [Vercel Platform](https://vercel.com/new):
+
+1. Push your code to GitHub
+2. Import your repository to Vercel
+3. Configure environment variables in Vercel dashboard
+4. Deploy automatically on every push
+
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/felippe-fernandes/credit_card_planner_frontend)
+
+### Other Platforms
+
+You can also deploy to:
+- **Netlify** - Configure build command: `npm run build`, publish directory: `.next`
+- **AWS Amplify** - Use Next.js 15 preset
+- **Docker** - Create Dockerfile with Node.js 20+ base image
+
+**Important**: Make sure to configure environment variables on your deployment platform.
+
+## 🧑‍💻 Development Guidelines
+
+### Code Style
+
+- Use TypeScript for all new code
+- Follow ESLint rules (`npm run lint`)
+- Use functional components with hooks
+- Prefer `const` over `let`, avoid `var`
+- Use descriptive variable names
+
+### Component Patterns
+
+```typescript
+// Prefer this pattern
+"use client";
+
+import { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+
+export default function MyComponent() {
+  const [state, setState] = useState<string>("");
+
+  const { data, isLoading } = useQuery({
+    queryKey: ["key"],
+    queryFn: fetchFunction,
+  });
+
+  if (isLoading) return <div>Loading...</div>;
+
+  return <div>{/* component JSX */}</div>;
+}
+```
+
+### Service Pattern
+
+```typescript
+// Always use useServiceClient hook
+const ServiceClient = useServiceClient({ service: MyService });
+
+// Use TanStack Query for data fetching
+const { data } = useQuery({
+  queryKey: ["myData"],
+  queryFn: async () => await ServiceClient.getData(),
+});
+
+// Use mutations for data modification
+const { mutate } = useMutation({
+  mutationFn: async (data) => await ServiceClient.create(data),
+  onSuccess: () => queryClient.invalidateQueries({ queryKey: ["myData"] }),
+});
+```
+
+### Form Pattern
+
+```typescript
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { mySchema } from "@/schemas/api/my.schema";
+
+const { register, handleSubmit, formState: { errors } } = useForm({
+  resolver: zodResolver(mySchema),
+});
+
+const onSubmit = (data: MyFormData) => {
+  // Handle form submission
+};
+```
+
+## 🤝 Contributing
+
+Contributions are welcome! Please follow these steps:
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
+
+### Commit Convention
+
+We follow conventional commits:
+
+- `feat:` - New feature
+- `fix:` - Bug fix
+- `docs:` - Documentation changes
+- `style:` - Code style changes (formatting, etc.)
+- `refactor:` - Code refactoring
+- `test:` - Test additions or changes
+- `chore:` - Build process or auxiliary tool changes
+
+## 📝 License
+
+This project is part of a personal portfolio and is available for educational purposes.
+
+## 👤 Author
+
+**Felippe Fernandes**
+
+- GitHub: [@felippe-fernandes](https://github.com/felippe-fernandes)
+- LinkedIn: [Felippe Fernandes](https://www.linkedin.com/in/felippe-fernandes/)
+
+## 🙏 Acknowledgments
+
+- **Framework**: [Next.js](https://nextjs.org/) by Vercel
+- **UI Components**: [shadcn/ui](https://ui.shadcn.com/) by shadcn
+- **Icons**: [Lucide](https://lucide.dev/) and [React Icons](https://react-icons.github.io/)
+- **Authentication**: [Supabase](https://supabase.com/)
+- **State Management**: [TanStack Query](https://tanstack.com/query) by Tanner Linsley
+- **Styling**: [Tailwind CSS](https://tailwindcss.com/)
 
 ---
 
-**Built with ❤️ using Next.js 15 and React 19**
+**Important Notes:**
+
+1. **Backend Required**: Make sure the backend API is running before starting the frontend. See the [backend repository](https://github.com/felippe-fernandes/credit_card_planner_backend) for setup instructions.
+
+2. **Supabase Setup**: You need to create a Supabase project and configure it in both frontend and backend.
+
+3. **Environment Variables**: The app validates environment variables at startup and will fail if they're missing or invalid.
+
+4. **Test Account**: Use `teste@teste.com` / `123456` to explore the app with sample data.
+
