@@ -7,22 +7,20 @@ import { InvoiceCard } from "@/components/invoices/InvoiceCard";
 import { InvoiceFilters } from "@/components/invoices/InvoiceFilters";
 import { PaymentDialog } from "@/components/invoices/PaymentDialog";
 import { useInvoices, useMarkInvoiceAsPaid } from "@/hooks/useInvoices";
-import { Invoice } from "@/types/entities/invoice";
+import { Invoice, InvoiceStatus } from "@/types/entities/invoice";
 import { FileText } from "lucide-react";
 import { InvoicesSkeleton } from "@/components/common/Skeletons";
+import { Skeleton } from "@/components/ui/skeleton";
 import { formatCurrency } from "@/lib/formatters";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 export default function InvoicesPage() {
-  const currentDate = new Date();
-  const currentMonth = currentDate.getMonth() + 1;
-  const currentYear = currentDate.getFullYear();
 
   const [filters, setFilters] = useState<{
     cardId?: string;
     month?: number;
     year?: number;
-    status?: string;
+    status?: InvoiceStatus;
   }>({});
 
   const [paymentDialogOpen, setPaymentDialogOpen] = useState(false);
@@ -57,12 +55,12 @@ export default function InvoicesPage() {
   };
 
   const handleConfirmPayment = (paidAmount?: number) => {
-    if (!selectedInvoice) return;
+    if (!selectedInvoice || !paidAmount) return;
 
     markAsPaidMutation.mutate(
       {
         id: selectedInvoice.id,
-        data: paidAmount ? { paidAmount: paidAmount.toString() } : {},
+        data: { paidAmount: paidAmount.toString() },
       },
       {
         onSuccess: () => {

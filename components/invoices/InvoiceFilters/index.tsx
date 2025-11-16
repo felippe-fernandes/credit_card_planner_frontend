@@ -8,7 +8,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Input } from "@/components/ui/input";
 import { useCards } from "@/hooks/useCards";
 
 interface InvoiceFiltersProps {
@@ -43,7 +42,8 @@ const STATUSES = [
 ];
 
 export function InvoiceFilters({ filters, onFilterChange }: InvoiceFiltersProps) {
-  const { data: cards = [] } = useCards();
+  const { data } = useCards();
+  const cards = data?.result || [];
   const currentYear = new Date().getFullYear();
   const years = Array.from({ length: 5 }, (_, i) => currentYear - 2 + i);
 

@@ -3,12 +3,15 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from "recharts";
 import { formatCurrencyWithSymbol } from "@/lib/formatters";
+import type { TooltipContentProps } from "recharts/types/component/Tooltip";
+import type { PieLabelRenderProps } from "recharts/types/polar/Pie";
 
 interface CategoryData {
   name: string;
   value: number;
   icon: string;
   color: string;
+  [key: string]: string | number;
 }
 
 interface SpendingByCategoryProps {
@@ -32,7 +35,7 @@ export function SpendingByCategory({ data }: SpendingByCategoryProps) {
 
   const total = data.reduce((sum, item) => sum + item.value, 0);
 
-  const CustomTooltip = ({ active, payload }: any) => {
+  const CustomTooltip = ({ active, payload }: TooltipContentProps<number, string>) => {
     if (active && payload && payload.length) {
       const data = payload[0].payload;
       const percentage = ((data.value / total) * 100).toFixed(1);
@@ -54,8 +57,13 @@ export function SpendingByCategory({ data }: SpendingByCategoryProps) {
     return null;
   };
 
-  const renderCustomLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percent }: any) => {
-    if (percent < 0.05) return null; // Hide labels for slices < 5%
+  const renderCustomLabel = (props: PieLabelRenderProps) => {
+    const { cx, cy, midAngle, innerRadius, outerRadius, percent } = props;
+
+    if (typeof percent !== 'number' || percent < 0.05) return null; // Hide labels for slices < 5%
+    if (typeof cx !== 'number' || typeof cy !== 'number') return null;
+    if (typeof innerRadius !== 'number' || typeof outerRadius !== 'number') return null;
+    if (typeof midAngle !== 'number') return null;
 
     const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
     const x = cx + radius * Math.cos(-midAngle * (Math.PI / 180));
@@ -98,10 +106,10 @@ export function SpendingByCategory({ data }: SpendingByCategoryProps) {
                 <Cell key={`cell-${index}`} fill={entry.color} />
               ))}
             </Pie>
-            <Tooltip content={<CustomTooltip />} />
+            <Tooltip content={CustomTooltip} />
             <Legend
-              formatter={(value, entry: any) => {
-                const data = entry.payload;
+              formatter={(_value, entry) => {
+                const data = entry.payload as CategoryData;
                 return `${data.icon} ${data.name}`;
               }}
             />
