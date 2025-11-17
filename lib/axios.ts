@@ -25,7 +25,6 @@ api.interceptors.response.use(
 				});
 
 				sessionStorage.setItem("auth_expired", "true");
-
 				window.location.href = "/login";
 			}
 		}
@@ -75,7 +74,7 @@ const getErrorMessage = (
 		return customMessage;
 	}
 
-if (status) {
+	if (status) {
 		const defaultMessage = ERROR_MESSAGES.get(status);
 
 		if (status >= 500) {

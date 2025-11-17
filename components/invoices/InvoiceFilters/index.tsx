@@ -9,6 +9,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useCards } from "@/hooks/useCards";
+import { MONTHS, INVOICE_STATUSES } from "@/constants/invoices";
 
 interface InvoiceFiltersProps {
   filters: {
@@ -19,27 +20,6 @@ interface InvoiceFiltersProps {
   };
   onFilterChange: (key: string, value: string | number | undefined) => void;
 }
-
-const MONTHS = [
-  { value: 1, label: "Janeiro" },
-  { value: 2, label: "Fevereiro" },
-  { value: 3, label: "Março" },
-  { value: 4, label: "Abril" },
-  { value: 5, label: "Maio" },
-  { value: 6, label: "Junho" },
-  { value: 7, label: "Julho" },
-  { value: 8, label: "Agosto" },
-  { value: 9, label: "Setembro" },
-  { value: 10, label: "Outubro" },
-  { value: 11, label: "Novembro" },
-  { value: 12, label: "Dezembro" },
-];
-
-const STATUSES = [
-  { value: "PENDING", label: "Pendente" },
-  { value: "PAID", label: "Paga" },
-  { value: "OVERDUE", label: "Atrasada" },
-];
 
 export function InvoiceFilters({ filters, onFilterChange }: InvoiceFiltersProps) {
   const { data } = useCards();
@@ -132,7 +112,7 @@ export function InvoiceFilters({ filters, onFilterChange }: InvoiceFiltersProps)
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="all">Todos os status</SelectItem>
-            {STATUSES.map((status) => (
+            {INVOICE_STATUSES.map((status) => (
               <SelectItem key={status.value} value={status.value}>
                 {status.label}
               </SelectItem>

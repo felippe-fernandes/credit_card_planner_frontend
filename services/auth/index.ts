@@ -29,7 +29,6 @@ export class AuthService {
       data: request,
     });
 
-    // O backend retorna 'result' em vez de 'data'
     if (response?.result?.access_token && response?.result?.refresh_token) {
       await supabase.auth.setSession({
         access_token: response.result.access_token,

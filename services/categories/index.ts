@@ -1,49 +1,38 @@
 import { handleAxiosRequest } from "@/lib/axios";
+import { BaseCRUDService } from "@/services/BaseCRUDService";
 import { IResponseBase } from "@/types/api";
-import { PaginationParams, PaginatedResponse } from "@/types/api/pagination";
 import { Category, CreateCategoryDto, UpdateCategoryDto } from "@/types/entities/category";
 
-export class CategoryService {
-  useMock: boolean;
+export interface CategoryFilters {
+  name?: string;
+}
 
-  constructor(useMock?: boolean) {
-    this.useMock = useMock ?? false;
-  }
-
-  public async getAll(params?: { name?: string } & PaginationParams): Promise<PaginatedResponse<Category[]>> {
-    return await handleAxiosRequest({
-      path: "/categories",
-      method: "get",
-      params,
-    });
-  }
+export class CategoryService extends BaseCRUDService<
+  Category,
+  CreateCategoryDto,
+  UpdateCategoryDto,
+  CategoryFilters
+> {
+  protected basePath = "/categories";
 
   public async getByName(name: string): Promise<IResponseBase<Category>> {
     return await handleAxiosRequest({
-      path: `/categories/search`,
+      path: `${this.basePath}/search`,
       method: "get",
       params: { name },
     });
   }
 
-  public async create(data: CreateCategoryDto): Promise<IResponseBase<Category>> {
-    return await handleAxiosRequest({
-      path: "/categories",
-      method: "post",
-      data,
-    });
-  }
-
   public async addDefaults(): Promise<IResponseBase<void>> {
     return await handleAxiosRequest({
-      path: "/categories/add-defaults",
+      path: `${this.basePath}/add-defaults`,
       method: "post",
     });
   }
 
   public async update(name: string, data: UpdateCategoryDto): Promise<IResponseBase<Category>> {
     return await handleAxiosRequest({
-      path: `/categories/${name}`,
+      path: `${this.basePath}/${name}`,
       method: "patch",
       data,
     });
@@ -51,7 +40,7 @@ export class CategoryService {
 
   public async delete(name: string): Promise<IResponseBase<{ name: string }>> {
     return await handleAxiosRequest({
-      path: `/categories/${name}`,
+      path: `${this.basePath}/${name}`,
       method: "delete",
     });
   }

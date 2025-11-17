@@ -14,7 +14,8 @@ import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { Button } from "../common/Button";
-import { Input } from "../common/Input";
+import { ErrorAlert } from "../common/ErrorAlert";
+import { FormField } from "../common/FormField";
 
 interface LoginFormProps {
   className?: string;
@@ -70,44 +71,30 @@ export function LoginForm({ className }: LoginFormProps) {
         <CardContent>
           <form onSubmit={handleSubmit(onSubmit)}>
             <div className="grid gap-6">
-              {isError && error && (
-                <div className="rounded-md bg-destructive/10 border border-destructive/20 p-3">
-                  <p className="text-destructive text-sm font-medium">
-                    {error.message}
-                  </p>
-                </div>
-              )}
+              {isError && <ErrorAlert message={error?.message} />}
 
-              <Input
+              <FormField
                 label="Email"
                 id="email"
                 type="email"
                 placeholder="john@example.com"
+                error={errors.email?.message}
                 required
-                {...register("email")}
                 disabled={isSubmitting}
+                {...register("email")}
               />
-              {errors.email && (
-                <p className="text-destructive text-sm">
-                  {errors.email.message}
-                </p>
-              )}
 
               <div className="flex flex-col gap-2">
-                <Input
+                <FormField
                   label="Password"
                   id="password"
                   type="password"
-                  required
                   placeholder="At least 6 characters"
-                  {...register("password")}
+                  error={errors.password?.message}
+                  required
                   disabled={isSubmitting}
+                  {...register("password")}
                 />
-                {errors.password && (
-                  <p className="text-destructive text-sm">
-                    {errors.password.message}
-                  </p>
-                )}
 
                 <a
                   href="#"

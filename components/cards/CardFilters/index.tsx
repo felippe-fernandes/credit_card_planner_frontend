@@ -9,6 +9,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
+import { CARD_FLAGS, COMMON_BANKS } from "@/constants/cards";
 
 interface CardFiltersProps {
   filters: {
@@ -19,30 +20,6 @@ interface CardFiltersProps {
   };
   onFilterChange: (key: string, value: string | number | undefined) => void;
 }
-
-const CARD_FLAGS = [
-  "Visa",
-  "Mastercard",
-  "Elo",
-  "American Express",
-  "Hipercard",
-  "Diners Club",
-];
-
-const COMMON_BANKS = [
-  "Nubank",
-  "Banco do Brasil",
-  "Bradesco",
-  "Itaú",
-  "Caixa",
-  "Santander",
-  "Inter",
-  "C6 Bank",
-  "Neon",
-  "Banco Original",
-  "BTG Pactual",
-  "PicPay",
-];
 
 export function CardFilters({ filters, onFilterChange }: CardFiltersProps) {
   return (

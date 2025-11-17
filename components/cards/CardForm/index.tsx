@@ -7,6 +7,7 @@ import { CreateCardDto, Card } from "@/types/entities/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { ComboboxWithCustom } from "@/components/common/ComboboxWithCustom";
+import { CARD_FLAGS, COMMON_BANKS } from "@/constants/cards";
 
 interface CardFormProps {
   onSubmit: (data: CreateCardDto) => void;
@@ -14,30 +15,6 @@ interface CardFormProps {
   isLoading?: boolean;
   formId?: string;
 }
-
-const CARD_FLAGS = [
-  "Visa",
-  "Mastercard",
-  "Elo",
-  "American Express",
-  "Hipercard",
-  "Diners Club",
-];
-
-const COMMON_BANKS = [
-  "Nubank",
-  "Banco do Brasil",
-  "Bradesco",
-  "Itaú",
-  "Caixa",
-  "Santander",
-  "Inter",
-  "C6 Bank",
-  "Neon",
-  "Banco Original",
-  "BTG Pactual",
-  "PicPay",
-];
 
 export function CardForm({
   onSubmit,
