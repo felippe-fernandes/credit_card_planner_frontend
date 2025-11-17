@@ -71,7 +71,7 @@ export function UpcomingInvoices({ invoices }: UpcomingInvoicesProps) {
         <div className="space-y-4">
           {invoices.map((invoice) => {
             const daysUntil = getDaysUntilDue(invoice.dueDate);
-            const remainingAmount = invoice.totalAmount - invoice.paidAmount;
+            const remainingAmount = Number(invoice.totalAmount) - Number(invoice.paidAmount);
 
             return (
               <div
@@ -98,7 +98,7 @@ export function UpcomingInvoices({ invoices }: UpcomingInvoicesProps) {
                   <span className="font-semibold block">
                     {formatCurrencyWithSymbol(remainingAmount)}
                   </span>
-                  {invoice.paidAmount > 0 && (
+                  {Number(invoice.paidAmount) > 0 && (
                     <span className="text-xs text-muted-foreground">
                       de {formatCurrencyWithSymbol(invoice.totalAmount)}
                     </span>

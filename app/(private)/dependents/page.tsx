@@ -1,24 +1,24 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { ColumnDef, DataTable } from "@/components/common/DataTable";
+import { DeleteDialog } from "@/components/common/DeleteDialog";
+import { FormDialog } from "@/components/common/FormDialog";
 import { PageHeader } from "@/components/common/PageHeader";
 import { SearchBar } from "@/components/common/SearchBar";
-import { DataTable, ColumnDef } from "@/components/common/DataTable";
-import { FormDialog } from "@/components/common/FormDialog";
-import { DeleteDialog } from "@/components/common/DeleteDialog";
-import { DependentForm } from "@/components/dependents/DependentForm";
-import {
-  useDependents,
-  useCreateDependent,
-  useUpdateDependent,
-  useDeleteDependent,
-} from "@/hooks/useDependents";
-import { Dependent, CreateDependentDto } from "@/types/entities/dependent";
-import { Users, Pencil, Trash2 } from "lucide-react";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { PageSkeleton } from "@/components/common/Skeletons";
+import { DependentForm } from "@/components/dependents/DependentForm";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import {
+  useCreateDependent,
+  useDeleteDependent,
+  useDependents,
+  useUpdateDependent,
+} from "@/hooks/useDependents";
+import { CreateDependentDto, Dependent } from "@/types/entities/dependent";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
+import { Pencil, Trash2, Users } from "lucide-react";
+import { useMemo, useState } from "react";
 
 export default function DependentsPage() {
   const [searchTerm, setSearchTerm] = useState("");
@@ -27,23 +27,19 @@ export default function DependentsPage() {
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [selectedDependent, setSelectedDependent] = useState<Dependent | null>(null);
 
-  // Sorting state
   const [sortColumn, setSortColumn] = useState<string>("");
   const [sortDirection, setSortDirection] = useState<"asc" | "desc">("asc");
 
-  // Fetch dependents
   const { data, isLoading, refetch, isRefetching } = useDependents({
     name: searchTerm || undefined,
   });
 
-  const dependents = data?.result || [];
-
-  // Mutations
   const createMutation = useCreateDependent();
+
+  const dependents = useMemo(() => data?.result || [], [data]);
   const updateMutation = useUpdateDependent();
   const deleteMutation = useDeleteDependent();
 
-  // Sorted data
   const sortedData = useMemo(() => {
     if (!sortColumn) return dependents;
 

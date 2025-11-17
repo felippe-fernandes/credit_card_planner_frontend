@@ -1,36 +1,71 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 💳 Credit Card Planner - Frontend
 
-## Getting Started
+> **A modern, full-featured expense tracking application designed to help you manage your credit card expenses, invoices, and transactions with ease.**
 
-First, run the development server:
+## 🔗 Backend API
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+This frontend application requires the backend API to function. You can find the backend repository information below:
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+- **Backend Live API:** [https://credit-card-planner-backend.onrender.com](https://credit-card-planner-backend.onrender.com)
+- **Backend Repository:** [credit_card_planner_backend](https://github.com/felippe-fernandes/credit_card_planner_backend)
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 🌐 Live Demo
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+**[credit-card-planner.vercel.app](https://credit-card-planner.vercel.app)**
 
-## Learn More
+## 📖 Table of Contents
 
-To learn more about Next.js, take a look at the following resources:
+- [About](#-about)
+- [Features](#-features)
+- [Tech Stack](#-tech-stack)
+- [Demo Account](#-demo-account)
+- [Deployment](#-deployment)
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+---
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## 📖 About
 
-## Deploy on Vercel
+This is the client-side application for the Credit Card Planner system, providing a user-friendly interface to manage multiple credit cards, track monthly invoices, and visualize financial spending.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## ✨ Features
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- **🔐 Secure Authentication**: Login and signup with JWT-based authentication via Supabase.
+- **💳 Credit Card Management**: Add, edit, and manage multiple credit cards.
+- **📊 Transaction Tracking**: Record and categorize all your credit card transactions.
+- **🧾 Invoice Management**: Track monthly invoices for each credit card.
+- **📂 Category Organization**: Organize transactions by custom categories.
+- **👥 Dependent Support**: Manage expenses for family members or dependents.
+- **📱 Responsive Design**: Fully responsive interface that works on desktop, tablet, and mobile.
+- **🌓 Dark Mode**: Built-in dark mode support for comfortable viewing.
+
+## 💻 Tech Stack
+
+| Category | Technology |
+| :--- | :--- |
+| **Frontend** | Next.js 15, React 19 |
+| **Styling** | Tailwind CSS, shadcn/ui |
+| **State Management** | TanStack Query |
+| **Authentication/Baas** | Supabase |
+
+## 🧪 Demo Account
+
+For recruiters and evaluators who want to explore the application with pre-filled data:
+
+- **Email:** `teste@teste.com`
+- **Password:** `123`
+
+---
+
+## 🚀 Deployment
+
+- **Frontend**: Vercel
+- **Database**: Supabase
+- **Backend API**: **Render** (Hosted Separately)
+
+---
+
+## 👤 Author
+
+**Felippe Fernandes**
+- GitHub: [@felippe-fernandes](https://github.com/felippe-fernandes)
+- LinkedIn: [Felippe Fernandes](https://www.linkedin.com/in/fernandes-felippe/)
