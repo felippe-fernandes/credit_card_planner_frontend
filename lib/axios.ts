@@ -8,18 +8,14 @@ export const api = axios.create({
 	},
 });
 
-// Flag to prevent multiple redirects
 let isRedirecting = false;
 
-// Response interceptor to handle unauthorized errors
 api.interceptors.response.use(
 	(response) => response,
 	(error) => {
-		// Check if error is 401 Unauthorized
 		if (error.response?.status === 401 && !isRedirecting) {
 			isRedirecting = true;
 
-			// Clear Supabase session from localStorage
 			if (typeof window !== "undefined") {
 				const keys = Object.keys(localStorage);
 				keys.forEach((key) => {
@@ -28,10 +24,8 @@ api.interceptors.response.use(
 					}
 				});
 
-				// Store a message to show after redirect
 				sessionStorage.setItem("auth_expired", "true");
 
-				// Redirect to login page
 				window.location.href = "/login";
 			}
 		}
@@ -48,6 +42,58 @@ interface IHandleAxiosRequest {
 	params?: object;
 	errorMessage?: string;
 }
+
+/**
+ * Map of HTTP status codes to their default error messages
+ */
+const ERROR_MESSAGES = new Map<number, string>([
+	[400, "Invalid data. Please check the fields and try again."],
+	[401, "Invalid email or password. Please check your credentials and try again."],
+	[404, "User not found."],
+	[500, "Server error. Please try again later."],
+]);
+
+/**
+ * Extracts and formats error message from Axios error response
+ * @param error - The Axios error object
+ * @param customMessage - Optional custom error message to override defaults
+ * @returns Formatted error message string
+ */
+const getErrorMessage = (
+	error: unknown,
+	customMessage?: string,
+): string => {
+	if (!axios.isAxiosError(error)) {
+		return customMessage ?? "An unexpected error occurred.";
+	}
+
+	const status = error.response?.status;
+	const backendMessage = error.response?.data?.message;
+	const backendError = error.response?.data?.error;
+
+	if (customMessage) {
+		return customMessage;
+	}
+
+if (status) {
+		const defaultMessage = ERROR_MESSAGES.get(status);
+
+		if (status >= 500) {
+			return "Server error. Please try again later.";
+		}
+
+		if (defaultMessage) {
+			return backendMessage || defaultMessage;
+		}
+	}
+
+	return (
+		backendMessage ||
+		backendError ||
+		error.message ||
+		"An error occurred during the request."
+	);
+};
 
 export const handleAxiosRequest = async <T>({
 	path,
@@ -68,16 +114,8 @@ export const handleAxiosRequest = async <T>({
 		});
 		return response.data;
 	} catch (error) {
-		if (axios.isAxiosError(error)) {
-			throw new Error(
-				errorMessage ??
-				error.response?.data.message ??
-				error.message ??
-				"An error occurred during the request",
-			);
-		} else {
-			throw new Error(errorMessage ?? "An unexpected error occurred");
-		}
+		const message = getErrorMessage(error, errorMessage);
+		throw new Error(message);
 	}
 };
 

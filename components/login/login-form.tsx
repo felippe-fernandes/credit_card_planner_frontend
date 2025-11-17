@@ -1,7 +1,3 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useRouter } from "next/navigation";
-import { useForm } from "react-hook-form";
-import { toast } from "sonner";
 import {
   Card,
   CardContent,
@@ -13,6 +9,10 @@ import { useServiceClient } from "@/hooks/useServiceClient";
 import { cn } from "@/lib/utils";
 import { AuthService } from "@/services/auth";
 import type { LoginRequest } from "@/types/auth";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useRouter } from "next/navigation";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import { Button } from "../common/Button";
 import { Input } from "../common/Input";
 
@@ -31,16 +31,13 @@ export function LoginForm({ className }: LoginFormProps) {
     formState: { errors, isSubmitting },
   } = useForm<LoginRequest>({});
 
-  const { mutate } = useMutation({
+  const { mutate, isError, error } = useMutation({
     mutationFn: async (payload: LoginRequest) =>
       await AuthClient.Login(payload),
     onSuccess: async (response) => {
-      // O backend retorna 'result' em vez de 'data'
       if (response?.result?.access_token) {
-        // Invalida a query de sessão para forçar atualização
-        await queryClient.invalidateQueries({ queryKey: ["session"] });
+       await queryClient.invalidateQueries({ queryKey: ["session"] });
 
-        // Aguarda um breve momento para o AuthContext processar a nova sessão
         await new Promise((resolve) => setTimeout(resolve, 100));
 
         toast.success("Login realizado com sucesso!");
@@ -51,8 +48,11 @@ export function LoginForm({ className }: LoginFormProps) {
     },
     onError: (error: Error) => {
       const message =
-        error.message || "Erro ao fazer login. Verifique suas credenciais.";
-      toast.error(message);
+        error.message || "Login failed. Please check your credentials.";
+      toast.error(message, {
+        duration: 5000,
+        description: "Please verify your information and try again.",
+      });
     },
   });
 
@@ -70,6 +70,14 @@ export function LoginForm({ className }: LoginFormProps) {
         <CardContent>
           <form onSubmit={handleSubmit(onSubmit)}>
             <div className="grid gap-6">
+              {isError && error && (
+                <div className="rounded-md bg-destructive/10 border border-destructive/20 p-3">
+                  <p className="text-destructive text-sm font-medium">
+                    {error.message}
+                  </p>
+                </div>
+              )}
+
               <Input
                 label="Email"
                 id="email"
