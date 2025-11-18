@@ -38,10 +38,10 @@ export class CategoryService extends BaseCRUDService<
     });
   }
 
-  public async delete(name: string): Promise<IResponseBase<{ name: string }>> {
-    return await handleAxiosRequest({
+  public override async delete(name: string): Promise<IResponseBase<{ id: string }>> {
+    return (await handleAxiosRequest({
       path: `${this.basePath}/${name}`,
       method: "delete",
-    });
+    })) as IResponseBase<{ id: string }>;
   }
 }

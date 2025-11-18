@@ -15,7 +15,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Button } from "@/components/common/Button";
-import { Input } from "@/components/common/Input";
+import { FormField } from "@/components/common/FormField";
 import { useServiceClient } from "@/hooks/useServiceClient";
 import { signupRequest } from "@/schemas/api/auth.schema";
 import { AuthService } from "@/services/auth";
@@ -61,62 +61,52 @@ export default function SignupForm() {
       <CardContent>
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className="grid gap-6">
-            <Input
+            <FormField
               label="Nome completo"
               id="name"
               type="text"
               placeholder="João Silva"
+              error={errors.name?.message}
               required
-              {...register("name")}
               disabled={isSubmitting}
+              {...register("name")}
             />
-            {errors.name && (
-              <p className="text-destructive text-sm">{errors.name.message}</p>
-            )}
 
-            <Input
+            <FormField
               label="Email"
               id="email"
               type="email"
               placeholder="seu@email.com"
               autoComplete="email"
+              error={errors.email?.message}
               required
-              {...register("email")}
               disabled={isSubmitting}
+              {...register("email")}
             />
-            {errors.email && (
-              <p className="text-destructive text-sm">{errors.email.message}</p>
-            )}
 
-            <Input
+            <FormField
               label="Telefone"
               id="phone"
               type="tel"
               placeholder="(11) 98765-4321"
               autoComplete="tel"
+              error={errors.phone?.message}
               required
-              {...register("phone")}
               disabled={isSubmitting}
+              {...register("phone")}
             />
-            {errors.phone && (
-              <p className="text-destructive text-sm">{errors.phone.message}</p>
-            )}
 
-            <Input
+            <FormField
               label="Senha"
               id="password"
               type="password"
               placeholder="Pelo menos 6 caracteres"
               autoComplete="new-password"
+              error={errors.password?.message}
               required
-              {...register("password")}
               disabled={isSubmitting}
+              {...register("password")}
             />
-            {errors.password && (
-              <p className="text-destructive text-sm">
-                {errors.password.message}
-              </p>
-            )}
 
             <Button
               id="signup"

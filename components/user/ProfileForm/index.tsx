@@ -4,8 +4,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { updateUserSchema } from "@/schemas/api/user.schema";
 import { UpdateUserDto, User } from "@/services/user";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { FormField } from "@/components/common/FormField";
 import { Button } from "@/components/ui/button";
 import { Loader2 } from "lucide-react";
 
@@ -31,51 +30,37 @@ export function ProfileForm({ user, onSubmit, isLoading = false }: ProfileFormPr
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-      {/* Name */}
-      <div className="space-y-2">
-        <Label htmlFor="name">Nome *</Label>
-        <Input
-          id="name"
-          placeholder="Seu nome completo"
-          {...register("name")}
-          disabled={isLoading}
-        />
-        {errors.name && (
-          <p className="text-sm text-destructive">{errors.name.message}</p>
-        )}
-      </div>
+      <FormField
+        label="Nome"
+        id="name"
+        placeholder="Seu nome completo"
+        error={errors.name?.message}
+        required
+        disabled={isLoading}
+        {...register("name")}
+      />
 
-      {/* Email */}
-      <div className="space-y-2">
-        <Label htmlFor="email">Email *</Label>
-        <Input
-          id="email"
-          type="email"
-          placeholder="seu@email.com"
-          {...register("email")}
-          disabled={isLoading}
-        />
-        {errors.email && (
-          <p className="text-sm text-destructive">{errors.email.message}</p>
-        )}
-      </div>
+      <FormField
+        label="Email"
+        id="email"
+        type="email"
+        placeholder="seu@email.com"
+        error={errors.email?.message}
+        required
+        disabled={isLoading}
+        {...register("email")}
+      />
 
-      {/* Phone */}
-      <div className="space-y-2">
-        <Label htmlFor="phone">Telefone</Label>
-        <Input
-          id="phone"
-          type="tel"
-          placeholder="+55 11 99999-9999"
-          {...register("phone")}
-          disabled={isLoading}
-        />
-        {errors.phone && (
-          <p className="text-sm text-destructive">{errors.phone.message}</p>
-        )}
-      </div>
+      <FormField
+        label="Telefone"
+        id="phone"
+        type="tel"
+        placeholder="+55 11 99999-9999"
+        error={errors.phone?.message}
+        disabled={isLoading}
+        {...register("phone")}
+      />
 
-      {/* Submit Button */}
       <Button type="submit" disabled={isLoading || !isDirty} className="w-full">
         {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
         {isLoading ? "Salvando..." : "Salvar Alterações"}

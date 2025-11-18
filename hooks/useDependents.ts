@@ -1,9 +1,11 @@
 import { DependentService } from "@/services/dependents";
-import { CreateDependentDto, UpdateDependentDto } from "@/types/entities/dependent";
+import type { Dependent, CreateDependentDto, UpdateDependentDto } from "@/types/entities/dependent";
 import { PaginationParams } from "@/types/api/pagination";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { toast } from "sonner";
+import { useQueryClient } from "@tanstack/react-query";
 import { useServiceClient } from "./useServiceClient";
+import { useQueryList, useQuerySingle } from "./useQueryFactory";
+import { useCRUDMutations } from "./useCRUDMutations";
+import { queryKeys } from "@/lib/queryKeys";
 
 interface UseDependentsFilters extends PaginationParams {
   name?: string;
@@ -11,84 +13,54 @@ interface UseDependentsFilters extends PaginationParams {
 }
 
 export function useDependents(filters?: UseDependentsFilters) {
-  const DependentClient = useServiceClient({ service: DependentService });
-
-  return useQuery({
-    queryKey: ["dependents", filters],
-    queryFn: async () => {
-      const response = await DependentClient.getAll(filters);
-      return response;
-    },
-  });
+  const dependentService = useServiceClient({ service: DependentService });
+  return useQueryList(dependentService, queryKeys.dependents.all, filters as Record<string, unknown>);
 }
 
 export function useDependent(id: string) {
-  const DependentClient = useServiceClient({ service: DependentService });
+  const dependentService = useServiceClient({ service: DependentService });
+  return useQuerySingle(dependentService, queryKeys.dependents.single, id, "id");
+}
 
-  return useQuery({
-    queryKey: ["dependent", id],
-    queryFn: async () => {
-      const response = await DependentClient.getById(id);
-      return response.result;
-    },
-    enabled: !!id,
-  });
+function useDependentMutations() {
+  const dependentService = useServiceClient({ service: DependentService });
+
+  return useCRUDMutations<Dependent, CreateDependentDto, UpdateDependentDto>(
+    dependentService,
+    {
+      entityName: "Dependent",
+      queryKey: queryKeys.dependents.all(),
+    }
+  );
 }
 
 export function useCreateDependent() {
-  const DependentClient = useServiceClient({ service: DependentService });
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: async (data: CreateDependentDto) => {
-      const response = await DependentClient.create(data);
-      return response.result;
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["dependents"] });
-      toast.success("Dependente criado com sucesso!");
-    },
-    onError: (error: Error) => {
-      toast.error(error.message || "Erro ao criar dependente");
-    },
-  });
+  const mutations = useDependentMutations();
+  return mutations.useCreate();
 }
 
 export function useUpdateDependent() {
-  const DependentClient = useServiceClient({ service: DependentService });
+  const mutations = useDependentMutations();
   const queryClient = useQueryClient();
+  const mutation = mutations.useUpdate();
 
-  return useMutation({
-    mutationFn: async ({ id, data }: { id: string; data: UpdateDependentDto }) => {
-      const response = await DependentClient.update(id, data);
-      return response.result;
+  return {
+    ...mutation,
+    mutate: (variables: { id: string; data: UpdateDependentDto }, options?: any) => {
+      mutation.mutate(variables, {
+        ...options,
+        onSuccess: (data: any, vars: any, context: any) => {
+          queryClient.invalidateQueries({
+            queryKey: queryKeys.dependents.single(vars.id),
+          });
+          options?.onSuccess?.(data, vars, context);
+        },
+      });
     },
-    onSuccess: (_, variables) => {
-      queryClient.invalidateQueries({ queryKey: ["dependents"] });
-      queryClient.invalidateQueries({ queryKey: ["dependent", variables.id] });
-      toast.success("Dependente atualizado com sucesso!");
-    },
-    onError: (error: Error) => {
-      toast.error(error.message || "Erro ao atualizar dependente");
-    },
-  });
+  };
 }
 
 export function useDeleteDependent() {
-  const DependentClient = useServiceClient({ service: DependentService });
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: async (id: string) => {
-      const response = await DependentClient.delete(id);
-      return response.result;
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["dependents"] });
-      toast.success("Dependente excluído com sucesso!");
-    },
-    onError: (error: Error) => {
-      toast.error(error.message || "Erro ao excluir dependente");
-    },
-  });
+  const mutations = useDependentMutations();
+  return mutations.useDelete();
 }

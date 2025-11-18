@@ -1,9 +1,11 @@
 import { CardService } from "@/services/cards";
-import { CreateCardDto, UpdateCardDto } from "@/types/entities/card";
+import type { Card, CreateCardDto, UpdateCardDto } from "@/types/entities/card";
 import { PaginationParams } from "@/types/api/pagination";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { toast } from "sonner";
+import { useQueryClient } from "@tanstack/react-query";
 import { useServiceClient } from "./useServiceClient";
+import { useQueryList, useQuerySingle } from "./useQueryFactory";
+import { useCRUDMutations } from "./useCRUDMutations";
+import { queryKeys } from "@/lib/queryKeys";
 
 interface UseCardsFilters extends PaginationParams {
   flag?: string;
@@ -14,84 +16,50 @@ interface UseCardsFilters extends PaginationParams {
 }
 
 export function useCards(filters?: UseCardsFilters) {
-  const CardClient = useServiceClient({ service: CardService });
-
-  return useQuery({
-    queryKey: ["cards", filters],
-    queryFn: async () => {
-      const response = await CardClient.getAll(filters);
-      return response;
-    },
-  });
+  const cardService = useServiceClient({ service: CardService });
+  return useQueryList(cardService, queryKeys.cards.all, filters as Record<string, unknown>);
 }
 
 export function useCard(id: string) {
-  const CardClient = useServiceClient({ service: CardService });
+  const cardService = useServiceClient({ service: CardService });
+  return useQuerySingle(cardService, queryKeys.cards.single, id, "id");
+}
 
-  return useQuery({
-    queryKey: ["card", id],
-    queryFn: async () => {
-      const response = await CardClient.getById(id);
-      return response.result;
-    },
-    enabled: !!id,
+function useCardMutations() {
+  const cardService = useServiceClient({ service: CardService });
+  const queryClient = useQueryClient();
+
+  return useCRUDMutations<Card, CreateCardDto, UpdateCardDto>(cardService, {
+    entityName: "Card",
+    queryKey: queryKeys.cards.all(),
   });
 }
 
 export function useCreateCard() {
-  const CardClient = useServiceClient({ service: CardService });
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: async (data: CreateCardDto) => {
-      const response = await CardClient.create(data);
-      return response.result;
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["cards"] });
-      toast.success("Cartão criado com sucesso!");
-    },
-    onError: (error: Error) => {
-      toast.error(error.message || "Erro ao criar cartão");
-    },
-  });
+  const mutations = useCardMutations();
+  return mutations.useCreate();
 }
 
 export function useUpdateCard() {
-  const CardClient = useServiceClient({ service: CardService });
+  const mutations = useCardMutations();
   const queryClient = useQueryClient();
+  const mutation = mutations.useUpdate();
 
-  return useMutation({
-    mutationFn: async ({ id, data }: { id: string; data: UpdateCardDto }) => {
-      const response = await CardClient.update(id, data);
-      return response.result;
+  return {
+    ...mutation,
+    mutate: (variables: { id: string; data: UpdateCardDto }, options?: any) => {
+      mutation.mutate(variables, {
+        ...options,
+        onSuccess: (data: any, vars: any, context: any) => {
+          queryClient.invalidateQueries({ queryKey: queryKeys.cards.single(vars.id) });
+          options?.onSuccess?.(data, vars, context);
+        },
+      });
     },
-    onSuccess: (_, variables) => {
-      queryClient.invalidateQueries({ queryKey: ["cards"] });
-      queryClient.invalidateQueries({ queryKey: ["card", variables.id] });
-      toast.success("Cartão atualizado com sucesso!");
-    },
-    onError: (error: Error) => {
-      toast.error(error.message || "Erro ao atualizar cartão");
-    },
-  });
+  };
 }
 
 export function useDeleteCard() {
-  const CardClient = useServiceClient({ service: CardService });
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: async (id: string) => {
-      const response = await CardClient.delete(id);
-      return response.result;
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["cards"] });
-      toast.success("Cartão excluído com sucesso!");
-    },
-    onError: (error: Error) => {
-      toast.error(error.message || "Erro ao excluir cartão");
-    },
-  });
+  const mutations = useCardMutations();
+  return mutations.useDelete();
 }

@@ -1,6 +1,7 @@
 "use client";
 
 import { TableSkeleton } from "@/components/common/Skeletons";
+import { EmptyState } from "@/components/common/EmptyState";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -18,7 +19,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { ArrowUpDown, MoreHorizontal } from "lucide-react";
+import { ArrowUpDown, MoreHorizontal, LucideIcon } from "lucide-react";
 import { ReactNode } from "react";
 
 export interface ColumnDef<T> {
@@ -42,6 +43,12 @@ interface DataTableProps<T> {
   actions?: DataTableAction<T>[];
   isLoading?: boolean;
   emptyMessage?: string;
+  emptyDescription?: string;
+  emptyIcon?: LucideIcon;
+  emptyAction?: {
+    label: string;
+    onClick: () => void;
+  };
   onSort?: (column: string, direction: "asc" | "desc") => void;
   sortColumn?: string;
   sortDirection?: "asc" | "desc";
@@ -54,6 +61,9 @@ export function DataTable<T extends Record<string, any>>({
   actions,
   isLoading = false,
   emptyMessage = "Nenhum resultado encontrado.",
+  emptyDescription,
+  emptyIcon,
+  emptyAction,
   onSort,
   sortColumn,
   sortDirection,
@@ -88,29 +98,13 @@ export function DataTable<T extends Record<string, any>>({
 
   if (data.length === 0) {
     return (
-      <div className="rounded-md border">
-        <Table>
-          <TableHeader>
-            <TableRow>
-              {columns.map((column) => (
-                <TableHead key={column.id}>{column.header}</TableHead>
-              ))}
-              {actions && actions.length > 0 && (
-                <TableHead className="w-[70px]">Ações</TableHead>
-              )}
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            <TableRow>
-              <TableCell
-                colSpan={columns.length + (actions ? 1 : 0)}
-                className="h-24 text-center text-muted-foreground"
-              >
-                {emptyMessage}
-              </TableCell>
-            </TableRow>
-          </TableBody>
-        </Table>
+      <div className="rounded-md border p-8">
+        <EmptyState
+          icon={emptyIcon}
+          title={emptyMessage}
+          description={emptyDescription}
+          action={emptyAction}
+        />
       </div>
     );
   }

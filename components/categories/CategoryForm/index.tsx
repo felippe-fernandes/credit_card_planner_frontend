@@ -4,8 +4,8 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { createCategorySchema } from "@/schemas/api/category.schema";
 import { CreateCategoryDto, Category } from "@/types/entities/category";
-import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { FormField } from "@/components/common/FormField";
 import { EmojiPicker } from "../EmojiPicker";
 import { ColorPicker } from "../ColorPicker";
 
@@ -42,19 +42,15 @@ export function CategoryForm({
 
   return (
     <form id={formId} onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-      {/* Name */}
-      <div className="space-y-2">
-        <Label htmlFor="name">Nome da Categoria *</Label>
-        <Input
-          id="name"
-          placeholder="Ex: Alimentação"
-          {...register("name")}
-          disabled={isLoading || !!defaultValues?.name} // Disable if editing (name is PK)
-        />
-        {errors.name && (
-          <p className="text-sm text-destructive">{errors.name.message}</p>
-        )}
-      </div>
+      <FormField
+        label="Nome da Categoria"
+        id="name"
+        placeholder="Ex: Alimentação"
+        error={errors.name?.message}
+        required
+        disabled={isLoading || !!defaultValues?.name}
+        {...register("name")}
+      />
 
       {/* Icon */}
       <div className="space-y-2">

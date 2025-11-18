@@ -1,7 +1,8 @@
 import { useQuery } from "@tanstack/react-query";
+import { PaginatedResponse } from "@/types/api/pagination";
 
 interface QueryListService<TEntity, TFilters> {
-  getAll: (filters?: TFilters) => Promise<{ result: TEntity[] }>;
+  getAll: (filters?: TFilters) => Promise<PaginatedResponse<TEntity[]>>;
 }
 
 interface QuerySingleService<TEntity> {

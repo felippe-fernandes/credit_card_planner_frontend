@@ -1,23 +1,11 @@
 import { handleAxiosRequest } from "@/lib/axios";
 import type { IResponseBase } from "@/types/api";
-
-export interface PaginationParams {
-  page?: number;
-  limit?: number;
-}
-
-export interface PaginatedResponse<T> {
-  result: T;
-  count: number;
-  message: string;
-  statusCode: number;
-  success: boolean;
-}
+import type { PaginationParams, PaginatedResponse } from "@/types/api/pagination";
 
 export abstract class BaseCRUDService<
-  TEntity,
-  TCreateDto,
-  TUpdateDto,
+  TEntity extends object,
+  TCreateDto extends object,
+  TUpdateDto extends object,
   TFilters = Record<string, unknown>
 > {
   protected abstract basePath: string;

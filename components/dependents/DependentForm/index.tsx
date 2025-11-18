@@ -4,8 +4,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { createDependentSchema } from "@/schemas/api/dependent.schema";
 import { CreateDependentDto, Dependent } from "@/types/entities/dependent";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { FormField } from "@/components/common/FormField";
 
 interface DependentFormProps {
   onSubmit: (data: CreateDependentDto) => void;
@@ -33,19 +32,16 @@ export function DependentForm({
 
   return (
     <form id={formId} onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-      <div className="space-y-2">
-        <Label htmlFor="name">Nome do Dependente *</Label>
-        <Input
-          id="name"
-          placeholder="Ex: João Silva"
-          {...register("name")}
-          disabled={isLoading}
-          autoFocus
-        />
-        {errors.name && (
-          <p className="text-sm text-destructive">{errors.name.message}</p>
-        )}
-      </div>
+      <FormField
+        label="Nome do Dependente"
+        id="name"
+        placeholder="Ex: João Silva"
+        error={errors.name?.message}
+        required
+        disabled={isLoading}
+        autoFocus
+        {...register("name")}
+      />
     </form>
   );
 }

@@ -1,9 +1,11 @@
 import { TransactionService } from "@/services/transactions";
-import { CreateTransactionDto, UpdateTransactionDto } from "@/types/entities/transaction";
+import type { Transaction, CreateTransactionDto, UpdateTransactionDto } from "@/types/entities/transaction";
 import { PaginationParams } from "@/types/api/pagination";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { toast } from "sonner";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useServiceClient } from "./useServiceClient";
+import { useQueryList, useQuerySingle } from "./useQueryFactory";
+import { queryKeys } from "@/lib/queryKeys";
+import { createBatchMutationCallbacks } from "@/lib/mutations";
 
 interface UseTransactionsFilters extends PaginationParams {
   card?: string;
@@ -18,91 +20,87 @@ interface UseTransactionsFilters extends PaginationParams {
 }
 
 export function useTransactions(filters?: UseTransactionsFilters) {
-  const TransactionClient = useServiceClient({ service: TransactionService });
-
-  return useQuery({
-    queryKey: ["transactions", filters],
-    queryFn: async () => {
-      const response = await TransactionClient.getAll(filters);
-      return response;
-    },
-  });
+  const transactionService = useServiceClient({ service: TransactionService });
+  return useQueryList(transactionService, queryKeys.transactions.all, filters as Record<string, unknown>);
 }
 
 export function useTransaction(id: string) {
-  const TransactionClient = useServiceClient({ service: TransactionService });
-
-  return useQuery({
-    queryKey: ["transaction", id],
-    queryFn: async () => {
-      const response = await TransactionClient.getById(id);
-      return response.result;
-    },
-    enabled: !!id,
-  });
+  const transactionService = useServiceClient({ service: TransactionService });
+  return useQuerySingle(transactionService, queryKeys.transactions.single, id, "id");
 }
 
 export function useCreateTransaction() {
-  const TransactionClient = useServiceClient({ service: TransactionService });
+  const transactionService = useServiceClient({ service: TransactionService });
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: async (data: CreateTransactionDto) => {
-      const response = await TransactionClient.create(data);
+      const response = await transactionService.create(data);
       return response.result;
     },
-    onSuccess: () => {
-      // Invalidate related queries
-      queryClient.invalidateQueries({ queryKey: ["transactions"] });
-      queryClient.invalidateQueries({ queryKey: ["cards"] }); // Card limit changes
-      queryClient.invalidateQueries({ queryKey: ["invoices"] }); // Invoices affected
-      toast.success("Transação criada com sucesso!");
-    },
-    onError: (error: Error) => {
-      toast.error(error.message || "Erro ao criar transação");
-    },
+    ...createBatchMutationCallbacks({
+      queryClient,
+      queryKeys: [
+        queryKeys.transactions.all(),
+        queryKeys.cards.all(),
+        queryKeys.invoices.all(),
+      ],
+      successMessage: "Transaction created successfully!",
+      errorMessage: "Error creating transaction",
+    }),
   });
 }
 
 export function useUpdateTransaction() {
-  const TransactionClient = useServiceClient({ service: TransactionService });
+  const transactionService = useServiceClient({ service: TransactionService });
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: async ({ id, data }: { id: string; data: UpdateTransactionDto }) => {
-      const response = await TransactionClient.update(id, data);
+      const response = await transactionService.update(id, data);
       return response.result;
     },
-    onSuccess: (_, variables) => {
-      queryClient.invalidateQueries({ queryKey: ["transactions"] });
-      queryClient.invalidateQueries({ queryKey: ["transaction", variables.id] });
-      queryClient.invalidateQueries({ queryKey: ["cards"] });
-      queryClient.invalidateQueries({ queryKey: ["invoices"] });
-      toast.success("Transação atualizada com sucesso!");
-    },
-    onError: (error: Error) => {
-      toast.error(error.message || "Erro ao atualizar transação");
-    },
+    ...createBatchMutationCallbacks<Transaction>({
+      queryClient,
+      queryKeys: [
+        queryKeys.transactions.all(),
+        queryKeys.cards.all(),
+        queryKeys.invoices.all(),
+      ],
+      successMessage: "Transaction updated successfully!",
+      errorMessage: "Error updating transaction",
+      onSuccessCallback: () => {
+        const mutations = queryClient.getMutationCache().getAll();
+        const lastMutation = mutations[mutations.length - 1];
+        if (lastMutation?.state.variables) {
+          const vars = lastMutation.state.variables as { id: string };
+          queryClient.invalidateQueries({
+            queryKey: queryKeys.transactions.single(vars.id),
+          });
+        }
+      },
+    }),
   });
 }
 
 export function useDeleteTransaction() {
-  const TransactionClient = useServiceClient({ service: TransactionService });
+  const transactionService = useServiceClient({ service: TransactionService });
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: async (id: string) => {
-      const response = await TransactionClient.delete(id);
+      const response = await transactionService.delete(id);
       return response.result;
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["transactions"] });
-      queryClient.invalidateQueries({ queryKey: ["cards"] });
-      queryClient.invalidateQueries({ queryKey: ["invoices"] });
-      toast.success("Transação excluída com sucesso!");
-    },
-    onError: (error: Error) => {
-      toast.error(error.message || "Erro ao excluir transação");
-    },
+    ...createBatchMutationCallbacks({
+      queryClient,
+      queryKeys: [
+        queryKeys.transactions.all(),
+        queryKeys.cards.all(),
+        queryKeys.invoices.all(),
+      ],
+      successMessage: "Transaction deleted successfully!",
+      errorMessage: "Error deleting transaction",
+    }),
   });
 }

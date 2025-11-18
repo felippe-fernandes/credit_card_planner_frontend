@@ -193,7 +193,13 @@ export default function DependentsPage() {
         data={sortedData}
         actions={actions}
         isLoading={isLoading}
-        emptyMessage="Nenhum dependente encontrado. Adicione o primeiro!"
+        emptyMessage="Nenhum dependente encontrado"
+        emptyDescription="Adicione dependentes para organizar e acompanhar gastos compartilhados."
+        emptyIcon={Users}
+        emptyAction={{
+          label: "Adicionar Dependente",
+          onClick: () => setCreateDialogOpen(true),
+        }}
         onSort={(column, direction) => {
           setSortColumn(column);
           setSortDirection(direction);

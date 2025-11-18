@@ -294,7 +294,13 @@ export default function TransactionsPage() {
         data={transactions}
         actions={actions}
         isLoading={isLoading}
-        emptyMessage="Nenhuma transação encontrada. Crie sua primeira transação!"
+        emptyMessage="Nenhuma transação encontrada"
+        emptyDescription="Comece registrando sua primeira compra para acompanhar suas despesas."
+        emptyIcon={ShoppingCart}
+        emptyAction={{
+          label: "Adicionar Transação",
+          onClick: () => setCreateDialogOpen(true),
+        }}
         onSort={(column, direction) => {
           changeSorting(column, direction);
         }}

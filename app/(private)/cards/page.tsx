@@ -259,7 +259,13 @@ export default function CardsPage() {
         data={cards}
         actions={actions}
         isLoading={isLoading}
-        emptyMessage="Nenhum cartão encontrado. Crie seu primeiro cartão!"
+        emptyMessage="Nenhum cartão encontrado"
+        emptyDescription="Comece adicionando seu primeiro cartão de crédito para começar a rastrear suas despesas."
+        emptyIcon={CreditCard}
+        emptyAction={{
+          label: "Adicionar Cartão",
+          onClick: () => setCreateDialogOpen(true),
+        }}
         onSort={(column, direction) => {
           changeSorting(column, direction);
         }}
